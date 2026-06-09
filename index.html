@@ -3,439 +3,634 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Funktionsscharen – Interaktiv Lernen</title>
+  <title>Funktionsscharen – Interaktives Lernportal</title>
+  <meta name="description" content="Lerne Funktionsscharen interaktiv kennen: Parameter, Ortskurven und grafische Darstellung." />
   <link rel="stylesheet" href="style.css" />
+
+  <!-- MathJax -->
   <script>
-    MathJax = {
-      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
-      options: { skipHtmlTags: ['script','noscript','style','textarea'] }
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$','$']], displayMath: [['\\[','\\]'], ['$$','$$']] },
+      svg: { fontCache: 'global' },
+      startup: { typeset: false }
     };
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async id="MathJax-script"></script>
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- ===== NAVIGATION ===== -->
 <nav id="navbar">
   <div class="nav-inner">
-    <a href="#" class="nav-logo">
-      <span class="logo-icon">∫</span>
-      <span>Funktionsscharen</span>
+    <a class="nav-logo" href="#hero">
+      <span class="icon">&#x1F4C8;</span>
+      Funktionsscharen
     </a>
-    <ul class="nav-links">
-      <li><a href="#einfuehrung">Einführung</a></li>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#einfuehrung">Einf&#xFC;hrung</a></li>
       <li><a href="#grundlagen">Grundlagen</a></li>
       <li><a href="#interaktiv">Interaktiv</a></li>
       <li><a href="#aufgaben">Aufgaben</a></li>
     </ul>
-    <button class="nav-toggle" id="navToggle" aria-label="Menü">&#9776;</button>
+    <button class="hamburger" id="hamburger" aria-label="Men&#xFC; &#xF6;ffnen">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero" id="hero">
-  <div class="hero-bg"></div>
+<!-- ===== HERO ===== -->
+<section id="hero">
+  <canvas class="hero-bg-canvas" id="heroBgCanvas"></canvas>
   <div class="hero-content">
-    <div class="hero-badge">Mathematik · Klasse 11/12</div>
-    <h1>Funktions&shy;scharen</h1>
-    <p class="hero-sub">Entdecke, wie ein Parameter eine ganze Familie von Kurven erzeugt – interaktiv, visuell und verständlich erklärt.</p>
-    <div class="hero-btns">
-      <a href="#einfuehrung" class="btn btn-primary">Jetzt starten</a>
-      <a href="#interaktiv" class="btn btn-ghost">Interaktiver Graph →</a>
+    <div class="hero-text">
+      <h1>
+        Entdecke<br>
+        <span class="highlight">Funktionsscharen</span>
+      </h1>
+      <p>
+        Eine Funktionsschar ist eine Familie von Funktionen, die durch einen Parameter beschrieben wird.
+        Ver&#xE4;ndere den Parameter &#x2013; und sieh, wie sich der Graph in Echtzeit wandelt.
+      </p>
+      <div class="hero-buttons">
+        <a href="#interaktiv" class="btn btn-primary">&#x1F3AE; Interaktiv erkunden</a>
+        <a href="#einfuehrung" class="btn btn-outline">&#x1F4D6; Einf&#xFC;hrung lesen</a>
+      </div>
     </div>
-  </div>
-  <div class="hero-math">
-    <div class="floating-formula" style="--d:0s">$f_t(x) = tx^2$</div>
-    <div class="floating-formula" style="--d:0.6s">$f_a(x) = x^3 - ax$</div>
-    <div class="floating-formula" style="--d:1.2s">$f_k(x) = \frac{x^2}{k} + k$</div>
+    <div class="hero-visual">
+      <div class="hero-canvas-wrap">
+        <canvas id="heroCanvas" width="420" height="420"></canvas>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- EINFÜHRUNG -->
-<section id="einfuehrung" class="section">
-  <div class="container">
+<!-- ===== EINFÜHRUNG ===== -->
+<section class="section" id="einfuehrung">
+  <div class="section-inner">
     <div class="section-header">
-      <span class="section-tag">01 · Einführung</span>
+      <span class="section-tag">Einf&#xFC;hrung</span>
       <h2>Was sind Funktionsscharen?</h2>
-      <p>Eine Funktionsschar ist eine Menge von Funktionen, die durch einen <strong>Parameter</strong> (oft $t$, $a$ oder $k$) beschrieben werden. Jeder Parameterwert liefert eine andere Funktion – und damit eine andere Kurve.</p>
+      <p>Wenn eine Funktion einen freien Parameter enth&#xE4;lt, entsteht eine ganze Familie von Graphen &#x2013; die Funktionsschar.</p>
     </div>
 
-    <div class="card-grid">
-      <div class="card card-icon">
-        <div class="card-icon-wrap" style="--c:#4f46e5">∑</div>
-        <h3>Definition</h3>
-        <p>Eine Funktionsschar $f_t$ ordnet jedem Parameterwert $t \in \mathbb{R}$ eine Funktion $f_t: \mathbb{R} \to \mathbb{R}$ zu.</p>
-        <div class="math-box">$$f_t(x) = t \cdot x^2 + 1, \quad t \in \mathbb{R}$$</div>
+    <div class="intro-grid fade-in">
+      <div class="card">
+        <div class="card-icon blue">&#x1F522;</div>
+        <h3>Der Parameter</h3>
+        <p>
+          Ein Parameter (oft <em>t</em>, <em>a</em>, <em>k</em>) ist eine Variable, die f&#xFC;r alle <em>x</em>-Werte
+          konstant bleibt, aber zwischen verschiedenen Funktionen der Schar variiert.
+          Jeder Parameterwert ergibt eine eigene Funktion.
+        </p>
       </div>
-      <div class="card card-icon">
-        <div class="card-icon-wrap" style="--c:#7c3aed">⟲</div>
-        <h3>Parameter</h3>
-        <p>Der Parameter steuert Form, Lage und Eigenschaften der Kurve. Er wirkt wie ein „Regler" für die gesamte Familie.</p>
-        <ul class="check-list">
-          <li>Streckt oder staucht den Graphen</li>
-          <li>Verschiebt Extrempunkte</li>
-          <li>Ändert die Anzahl der Nullstellen</li>
-        </ul>
+      <div class="card">
+        <div class="card-icon purple">&#x1F4CA;</div>
+        <h3>Die Schar als Ganzes</h3>
+        <p>
+          Statt eine einzelne Kurve zu betrachten, untersucht man das
+          Verhalten <em>aller</em> Kurven gemeinsam: Wie verschieben, strecken
+          oder kr&#xFC;mmen sie sich, wenn der Parameter w&#xE4;chst?
+        </p>
       </div>
-      <div class="card card-icon">
-        <div class="card-icon-wrap" style="--c:#06b6d4">◎</div>
-        <h3>Ortskurve</h3>
-        <p>Die <em>Ortskurve</em> verbindet alle Extrempunkte (oder Wendepunkte) der Schar zu einer eigenen Kurve.</p>
-        <div class="math-box">Ortskurve: Menge aller Extrempunkte $E_t$ für alle $t$</div>
+      <div class="card">
+        <div class="card-icon cyan">&#x1F3AF;</div>
+        <h3>Spezielle Punkte</h3>
+        <p>
+          Extrempunkte, Nullstellen und Wendepunkte h&#xE4;ngen oft vom Parameter ab.
+          Verfolgt man diese Punkte &#xFC;ber alle Parameterwerte, entsteht die
+          <strong>Ortskurve</strong>.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-icon green">&#x1F50D;</div>
+        <h3>Anwendungen</h3>
+        <p>
+          Funktionsscharen modellieren physikalische Vorg&#xE4;nge (z.&#xA0;B. Wurfparabeln),
+          wirtschaftliche Zusammenh&#xE4;nge und viele weitere reale Situationen,
+          in denen ein Parameter die Form einer Kurve bestimmt.
+        </p>
       </div>
     </div>
 
-    <div class="example-box">
-      <h3>Beispiel: Parabelnschar $f_t(x) = x^2 - 2tx + t$</h3>
-      <div class="example-steps">
-        <div class="step">
-          <span class="step-num">1</span>
-          <div>
-            <strong>Parameter einsetzen:</strong> Für $t = 0{,}5$: $f_{0,5}(x) = x^2 - x + 0{,}5$<br>
-            Für $t = 2$: $f_2(x) = x^2 - 4x + 2$
-          </div>
-        </div>
-        <div class="step">
-          <span class="step-num">2</span>
-          <div>
-            <strong>Extrempunkt bestimmen:</strong> $f_t'(x) = 2x - 2t = 0 \Rightarrow x_E = t$<br>
-            $y_E = f_t(t) = t^2 - 2t^2 + t = -t^2 + t$
-          </div>
-        </div>
-        <div class="step">
-          <span class="step-num">3</span>
-          <div>
-            <strong>Ortskurve:</strong> $E_t = (t,\, -t^2+t)$, also $y = -x^2 + x$
-          </div>
-        </div>
+    <div class="definition-box fade-in stagger-1">
+      <div class="label">Definition</div>
+      <h3>Funktionsschar</h3>
+      <p>
+        Eine <strong>Funktionsschar</strong> \( \{f_t\}_{t \in \mathbb{R}} \) ist eine Menge von Funktionen,
+        bei der jede Funktion \( f_t \) durch denselben Funktionsterm definiert wird,
+        in dem der Parameter \( t \) vorkommt:
+      </p>
+      <div class="math-formula">
+        \[ f_t(x) = \ldots\, t \,\ldots\, x \,\ldots, \quad t \in \mathbb{R} \]
       </div>
+      <p>
+        F&#xFC;r jeden fest gew&#xE4;hlten Wert von \( t \) erh&#xE4;lt man eine konkrete Funktion aus der Schar.
+        Die Gesamtheit aller so entstehenden Graphen bildet die <em>Kurvenschar</em>.
+      </p>
+    </div>
+
+    <div class="definition-box fade-in stagger-2" style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-color:#6ee7b7;">
+      <div class="label" style="color:#059669;">Beispiel</div>
+      <h3>Einfaches Beispiel: Geradenschar</h3>
+      <p>Die Funktionsschar \( f_t(x) = t \cdot x \) mit \( t \in \mathbb{R} \) beschreibt alle Ursprungsgeraden:</p>
+      <div class="math-formula">
+        \[ f_1(x) = x,\quad f_2(x) = 2x,\quad f_{-1}(x) = -x,\quad f_{0{,}5}(x) = 0{,}5x \]
+      </div>
+      <p>
+        Der Parameter \( t \) entspricht hier der Steigung der Geraden. Je gr&#xF6;&#xDF;er \( |t| \), desto steiler die Gerade.
+      </p>
     </div>
   </div>
 </section>
 
-<!-- GRUNDLAGEN -->
-<section id="grundlagen" class="section section-alt">
-  <div class="container">
+<!-- ===== GRUNDLAGEN ===== -->
+<section class="section" id="grundlagen">
+  <div class="section-inner">
     <div class="section-header">
-      <span class="section-tag">02 · Grundlagen</span>
-      <h2>Wichtige Begriffe & Methoden</h2>
-      <p>Diese Konzepte braucht man beim Arbeiten mit Funktionsscharen immer wieder.</p>
+      <span class="section-tag">Grundlagen</span>
+      <h2>Wichtige Funktionstypen</h2>
+      <p>Diese drei Scharen begegnen dir am h&#xE4;ufigsten im Schulunterricht.</p>
     </div>
 
-    <div class="tabs" id="grundlagenTabs">
-      <div class="tab-buttons">
-        <button class="tab-btn active" data-tab="extrema">Extrempunkte</button>
-        <button class="tab-btn" data-tab="nullstellen">Nullstellen</button>
-        <button class="tab-btn" data-tab="wendepunkte">Wendepunkte</button>
-        <button class="tab-btn" data-tab="ortskurve">Ortskurve</button>
+    <div class="examples-grid">
+      <!-- Quadratisch -->
+      <div class="example-card fade-in">
+        <div class="example-header blue">
+          <span>&#x1F4D0;</span> Quadratische Schar
+        </div>
+        <div class="example-body">
+          <div class="formula">
+            \( f_t(x) = t \cdot x^2 \)
+          </div>
+          <p>Der Parameter <em>t</em> steuert die &#xD6;ffnungsweite der Parabel:</p>
+          <ul>
+            <li>\(t &gt; 0\): Parabel &#xF6;ffnet nach oben</li>
+            <li>\(t &lt; 0\): Parabel &#xF6;ffnet nach unten</li>
+            <li>\(|t|\) gro&#xDF;: schmale Parabel</li>
+            <li>\(|t|\) klein: breite Parabel</li>
+          </ul>
+          <div class="info-row">
+            <span class="badge badge-blue">Scheitelpunkt: (0, 0)</span>
+            <span class="badge badge-purple">Nullstelle: x = 0</span>
+          </div>
+        </div>
       </div>
-      <div class="tab-content">
 
-        <div class="tab-pane active" id="tab-extrema">
-          <div class="two-col">
-            <div>
-              <h3>Extrempunkte der Schar</h3>
-              <p>Für jede Funktion $f_t$ werden Extrempunkte wie gewohnt über die Ableitung bestimmt:</p>
-              <ol class="steps-list">
-                <li>$f_t'(x) = 0$ lösen → gibt $x_E$ (oft abhängig von $t$)</li>
-                <li>$f_t''(x_E) \neq 0$ prüfen</li>
-                <li>$y_E = f_t(x_E)$ berechnen</li>
-                <li>Ergebnis: $E_t = (x_E(t),\, y_E(t))$</li>
-              </ol>
-            </div>
-            <div class="math-card">
-              <div class="math-card-title">Beispiel</div>
-              $$f_t(x) = x^3 - 3tx$$
-              $$f_t'(x) = 3x^2 - 3t = 0$$
-              $$x = \pm\sqrt{t} \quad (t > 0)$$
-              $$y = f_t(\sqrt{t}) = -2t\sqrt{t}$$
-            </div>
+      <!-- Kubisch -->
+      <div class="example-card fade-in stagger-1">
+        <div class="example-header purple">
+          <span>&#x1F30A;</span> Kubische Schar
+        </div>
+        <div class="example-body">
+          <div class="formula">
+            \( f_a(x) = x^3 - a \cdot x \)
+          </div>
+          <p>Der Parameter <em>a</em> bestimmt Lage und Existenz der Extrema:</p>
+          <ul>
+            <li>\(a &gt; 0\): lokales Maximum und Minimum</li>
+            <li>\(a = 0\): Wendepunkt ohne Extremum</li>
+            <li>\(a &lt; 0\): keine reellen Extrema</li>
+            <li>Extremstellen bei \( x = \pm\sqrt{a/3} \)</li>
+          </ul>
+          <div class="info-row">
+            <span class="badge badge-purple">Punktsymm. zum Ursprung</span>
           </div>
         </div>
+      </div>
 
-        <div class="tab-pane" id="tab-nullstellen">
-          <div class="two-col">
-            <div>
-              <h3>Nullstellen der Schar</h3>
-              <p>Nullstellen sind die $x$-Werte, für die $f_t(x) = 0$ gilt. Je nach Parameter kann die Anzahl variieren.</p>
-              <ul class="check-list">
-                <li>Löse $f_t(x) = 0$ nach $x$ auf (Parameter $t$ bleibt stehen)</li>
-                <li>Diskriminante zeigt: wie viele Nullstellen gibt es?</li>
-                <li>Für welche $t$ existieren keine / eine / zwei Nullstellen?</li>
-              </ul>
-            </div>
-            <div class="math-card">
-              <div class="math-card-title">Beispiel</div>
-              $$f_t(x) = x^2 - t$$
-              $$x^2 = t$$
-              $$x = \pm\sqrt{t} \text{ für } t > 0$$
-              $$\text{keine NS für } t < 0$$
-            </div>
+      <!-- Gemischt -->
+      <div class="example-card fade-in stagger-2">
+        <div class="example-header cyan">
+          <span>&#x1F504;</span> Gemischte Schar
+        </div>
+        <div class="example-body">
+          <div class="formula">
+            \( f_k(x) = \tfrac{1}{k}\,x^2 + k \)
+          </div>
+          <p>Der Parameter <em>k</em> steuert gleichzeitig Breite und H&#xF6;he:</p>
+          <ul>
+            <li>Scheitelpunkt bei \( (0,\, k) \)</li>
+            <li>&#xD6;ffnungsweite \( \sim \tfrac{1}{k} \)</li>
+            <li>W&#xE4;chst \(k\): Schar wird enger &amp; h&#xF6;her</li>
+            <li>Ortskurve der Scheitelpunkte: y-Achse</li>
+          </ul>
+          <div class="info-row">
+            <span class="badge badge-cyan">k &#x2260; 0</span>
           </div>
         </div>
+      </div>
+    </div>
 
-        <div class="tab-pane" id="tab-wendepunkte">
-          <div class="two-col">
-            <div>
-              <h3>Wendepunkte der Schar</h3>
-              <p>Wendepunkte liegen dort, wo die Krümmung das Vorzeichen wechselt:</p>
-              <ol class="steps-list">
-                <li>$f_t''(x) = 0$ lösen → $x_W(t)$</li>
-                <li>$f_t'''(x_W) \neq 0$ prüfen</li>
-                <li>$y_W = f_t(x_W)$</li>
-                <li>Ortskurve durch alle $W_t$</li>
-              </ol>
-            </div>
-            <div class="math-card">
-              <div class="math-card-title">Beispiel</div>
-              $$f_t(x) = x^4 - 6tx^2$$
-              $$f_t''(x) = 12x^2 - 12t = 0$$
-              $$x_W = \pm\sqrt{t}$$
-              $$y_W = 1 - 6t \cdot t = 1 - 6t^2$$
-            </div>
-          </div>
+    <!-- Ortskurven -->
+    <div class="ortskurven-section fade-in">
+      <h3>&#x1F4CD; Ortskurven</h3>
+      <p>
+        Eine <strong>Ortskurve</strong> verbindet alle gleichartigen Punkte (z.&#xA0;B. Hochpunkte, Tiefpunkte,
+        Wendepunkte) der verschiedenen Funktionen einer Schar. Sie zeigt, wie diese Punkte
+        wandern, wenn der Parameter variiert.
+      </p>
+      <p>
+        <strong>Methode:</strong> Man dr&#xFC;ckt die Koordinaten des gesuchten Punktes
+        \( (x_E(t),\, y_E(t)) \) durch den Parameter aus und eliminiert \( t \),
+        um eine Gleichung \( y = g(x) \) zu erhalten.
+      </p>
+      <div class="ortskurven-grid">
+        <div class="ok-card">
+          <h4>Beispiel: \( f_t(x) = x^2 - 2tx \)</h4>
+          <p>Extrempunkte bei \( x_E = t \), \( y_E = -t^2 \).</p>
+          <p>Eliminiere \( t \): Da \( t = x_E \) und \( y_E = -t^2 = -x_E^2 \).</p>
+          <div class="ok-formula">Ortskurve: y = &#x2212;x&#xB2;</div>
         </div>
-
-        <div class="tab-pane" id="tab-ortskurve">
-          <div class="two-col">
-            <div>
-              <h3>Ortskurve berechnen</h3>
-              <p>Die Ortskurve entsteht, indem man den Parameter $t$ aus den Koordinaten des Sonderpunkts eliminiert:</p>
-              <ol class="steps-list">
-                <li>Extrempunkt $E_t = (x_E(t),\, y_E(t))$ bestimmen</li>
-                <li>$t$ aus der $x$-Koordinate ausdrücken: $t = g(x)$</li>
-                <li>In die $y$-Koordinate einsetzen</li>
-                <li>Ergebnis: Ortskurve $y = h(x)$</li>
-              </ol>
-            </div>
-            <div class="math-card">
-              <div class="math-card-title">Beispiel</div>
-              $$E_t = (t,\; -t^2+t)$$
-              $$\Rightarrow x = t \Rightarrow t = x$$
-              $$\Rightarrow y = -x^2 + x$$
-              $$\text{Ortskurve: } y = -x^2 + x$$
-            </div>
-          </div>
+        <div class="ok-card">
+          <h4>Beispiel: \( f_a(x) = x^3 - ax \)</h4>
+          <p>Extremstellen bei \( x_E = \pm\sqrt{a/3} \).</p>
+          <p>Ortskurve der Hochpunkte ergibt nach Elimination von \( a \) eine kubische Kurve.</p>
+          <div class="ok-formula">Ortskurve: kubische Parabel</div>
         </div>
-
       </div>
     </div>
   </div>
 </section>
 
-<!-- INTERAKTIV -->
-<section id="interaktiv" class="section">
-  <div class="container">
+<!-- ===== INTERAKTIV ===== -->
+<section class="section" id="interaktiv">
+  <div class="section-inner">
     <div class="section-header">
-      <span class="section-tag">03 · Interaktiv</span>
-      <h2>Interaktiver Grapher</h2>
-      <p>Stell den Parameter mit dem Schieberegler ein und beobachte, wie sich der Graph verändert.</p>
+      <span class="section-tag">Interaktiv</span>
+      <h2>Funktionen selbst erkunden</h2>
+      <p>Verschiebe die Regler und beobachte, wie sich die Schar in Echtzeit ver&#xE4;ndert.</p>
     </div>
 
-    <!-- Funktionswahl -->
-    <div class="function-selector">
-      <button class="fn-btn active" data-fn="0">$f_t(x) = tx^2$</button>
-      <button class="fn-btn" data-fn="1">$f_a(x) = x^3 - ax$</button>
-      <button class="fn-btn" data-fn="2">$f_k(x) = \tfrac{1}{k}x^2 + k$</button>
-      <button class="fn-btn" data-fn="3">$f_t(x) = x^2 - 2tx + t$</button>
-    </div>
-
-    <div class="graph-layout">
-      <div class="graph-panel">
-        <canvas id="mainCanvas" width="700" height="460"></canvas>
-        <div class="canvas-legend" id="canvasLegend"></div>
+    <!-- Tabs -->
+    <div class="plotter-card fade-in">
+      <div class="plotter-tabs" id="plotterTabs">
+        <button class="tab-btn active" data-tab="0">&#x1F4D0; Quadratisch</button>
+        <button class="tab-btn" data-tab="1">&#x1F30A; Kubisch</button>
+        <button class="tab-btn" data-tab="2">&#x1F504; Gemischt</button>
       </div>
-      <div class="controls-panel">
-        <div class="ctrl-card">
-          <h4 id="paramLabel">Parameter $t$</h4>
-          <div class="slider-row">
-            <span id="paramMin">-3</span>
-            <input type="range" id="paramSlider" min="-3" max="3" step="0.1" value="1" class="slider" />
-            <span id="paramMax">3</span>
+
+      <!-- Tab 0: Quadratisch -->
+      <div class="tab-content active" id="tab0" style="grid-template-columns:1fr 300px;">
+        <div class="plotter-header" style="grid-column:1/-1;">
+          <h3>&#x1F4D0; Quadratische Funktionsschar</h3>
+          <div class="plotter-formula-display" id="formula0">f&#x209C;(x) = t &#xB7; x&#xB2;</div>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="canvas0" width="560" height="420"></canvas>
+        </div>
+        <div class="controls-panel">
+          <div class="control-group">
+            <label>Parameter t <span class="val" id="val0t">1.0</span></label>
+            <input type="range" id="slider0t" min="-3" max="3" step="0.1" value="1">
           </div>
-          <div class="slider-value">Aktueller Wert: <strong id="paramValue">1</strong></div>
+          <div class="control-divider"></div>
+          <div class="control-group">
+            <label>Anzahl Kurven <span class="val" id="val0n">7</span></label>
+            <input type="range" id="slider0n" min="3" max="13" step="2" value="7">
+          </div>
+          <div class="control-group">
+            <label>t-Bereich <span class="val" id="val0r">3</span></label>
+            <input type="range" id="slider0r" min="1" max="5" step="0.5" value="3">
+          </div>
+          <div class="control-divider"></div>
+          <div class="toggle-group">
+            <label class="toggle-item">
+              <input type="checkbox" id="chk0vert" checked>
+              <span>Aktive Kurve hervorheben</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="chk0ok">
+              <span>Ortskurve (Scheitelpunkte)</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="chk0zeros">
+              <span>Nullstellen markieren</span>
+            </label>
+          </div>
+          <div class="control-divider"></div>
+          <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;">
+            <strong>Eigenschaft:</strong><br>
+            Scheitelpunkt immer bei (0, 0).<br>
+            F&#xFC;r t &#x2192; 0 wird die Parabel immer flacher.
+          </div>
         </div>
-        <div class="ctrl-card">
-          <h4>Mehrere Kurven</h4>
-          <label class="toggle-row">
-            <input type="checkbox" id="showFamily" checked />
-            <span class="toggle-track"></span>
-            <span>Kurvenschar anzeigen</span>
-          </label>
-          <label class="toggle-row">
-            <input type="checkbox" id="showOrtskurve" />
-            <span class="toggle-track"></span>
-            <span>Ortskurve anzeigen</span>
-          </label>
-          <label class="toggle-row">
-            <input type="checkbox" id="showExtrema" checked />
-            <span class="toggle-track"></span>
-            <span>Extrempunkt markieren</span>
-          </label>
+      </div>
+
+      <!-- Tab 1: Kubisch -->
+      <div class="tab-content" id="tab1" style="grid-template-columns:1fr 300px;">
+        <div class="plotter-header" style="grid-column:1/-1;">
+          <h3>&#x1F30A; Kubische Funktionsschar</h3>
+          <div class="plotter-formula-display" id="formula1">f&#x2090;(x) = x&#xB3; &#x2212; a&#xB7;x</div>
         </div>
-        <div class="info-card" id="infoCard">
-          <h4>Eigenschaften</h4>
-          <div id="infoContent"></div>
+        <div class="canvas-wrap">
+          <canvas id="canvas1" width="560" height="420"></canvas>
+        </div>
+        <div class="controls-panel">
+          <div class="control-group">
+            <label>Parameter a <span class="val" id="val1a">2.0</span></label>
+            <input type="range" id="slider1a" min="-4" max="6" step="0.1" value="2">
+          </div>
+          <div class="control-divider"></div>
+          <div class="control-group">
+            <label>Anzahl Kurven <span class="val" id="val1n">7</span></label>
+            <input type="range" id="slider1n" min="3" max="13" step="2" value="7">
+          </div>
+          <div class="control-group">
+            <label>a-Bereich <span class="val" id="val1r">4</span></label>
+            <input type="range" id="slider1r" min="1" max="6" step="0.5" value="4">
+          </div>
+          <div class="control-divider"></div>
+          <div class="toggle-group">
+            <label class="toggle-item">
+              <input type="checkbox" id="chk1vert" checked>
+              <span>Aktive Kurve hervorheben</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="chk1ok">
+              <span>Ortskurve (Extrema)</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="chk1ext">
+              <span>Extrempunkte markieren</span>
+            </label>
+          </div>
+          <div class="control-divider"></div>
+          <div id="info1" style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;">
+            Extremstellen bei x = &#xB1;&#x221A;(a/3)
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Gemischt -->
+      <div class="tab-content" id="tab2" style="grid-template-columns:1fr 300px;">
+        <div class="plotter-header" style="grid-column:1/-1;">
+          <h3>&#x1F504; Gemischte Funktionsschar</h3>
+          <div class="plotter-formula-display" id="formula2">f&#x2096;(x) = (1/k)&#xB7;x&#xB2; + k</div>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="canvas2" width="560" height="420"></canvas>
+        </div>
+        <div class="controls-panel">
+          <div class="control-group">
+            <label>Parameter k <span class="val" id="val2k">2.0</span></label>
+            <input type="range" id="slider2k" min="0.3" max="4" step="0.1" value="2">
+          </div>
+          <div class="control-divider"></div>
+          <div class="control-group">
+            <label>Anzahl Kurven <span class="val" id="val2n">7</span></label>
+            <input type="range" id="slider2n" min="3" max="13" step="2" value="7">
+          </div>
+          <div class="control-group">
+            <label>k-Bereich <span class="val" id="val2r">3.5</span></label>
+            <input type="range" id="slider2r" min="0.5" max="4" step="0.25" value="3.5">
+          </div>
+          <div class="control-divider"></div>
+          <div class="toggle-group">
+            <label class="toggle-item">
+              <input type="checkbox" id="chk2vert" checked>
+              <span>Aktive Kurve hervorheben</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="chk2ok">
+              <span>Ortskurve (Scheitelpunkte)</span>
+            </label>
+            <label class="toggle-item">
+              <input type="checkbox" id="chk2vex">
+              <span>Scheitelpunkt markieren</span>
+            </label>
+          </div>
+          <div class="control-divider"></div>
+          <div id="info2" style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;">
+            Scheitelpunkt: (0, k)<br>
+            Ortskurve der Scheitelpunkte: y-Achse
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="fn-description" id="fnDescription"></div>
+    <!-- Hinweis -->
+    <div class="definition-box fade-in" style="margin-top:2rem;">
+      <div class="label">Tipp</div>
+      <h3>Wie liest man die Schar?</h3>
+      <p>
+        Die <strong>helleren, d&#xFC;nneren</strong> Kurven geh&#xF6;ren zu anderen Parameterwerten der Schar.
+        Die <strong>farbige, dickere</strong> Kurve zeigt den aktuell gew&#xE4;hlten Parameter.
+        Aktiviere die <em>Ortskurve</em>, um zu sehen, wie spezielle Punkte beim Variieren des Parameters wandern.
+      </p>
+    </div>
   </div>
 </section>
 
-<!-- AUFGABEN -->
-<section id="aufgaben" class="section section-alt">
-  <div class="container">
+<!-- ===== AUFGABEN ===== -->
+<section class="section" id="aufgaben">
+  <div class="section-inner">
     <div class="section-header">
-      <span class="section-tag">04 · Aufgaben</span>
-      <h2>Übungsaufgaben</h2>
-      <p>Teste dein Wissen mit diesen Aufgaben. Klicke auf „Lösung anzeigen" wenn du fertig bist.</p>
+      <span class="section-tag">Aufgaben</span>
+      <h2>Teste dein Wissen</h2>
+      <p>5 Aufgaben zu Funktionsscharen &#x2013; von leicht bis anspruchsvoll.</p>
     </div>
 
-    <div class="aufgaben-list" id="aufgabenList">
-
-      <div class="aufgabe" id="a1">
-        <div class="aufgabe-header">
-          <span class="aufgabe-num">Aufgabe 1</span>
-          <span class="aufgabe-tag">Extrempunkte</span>
+    <div class="quiz-container">
+      <div class="quiz-progress">
+        <div class="progress-bar-wrap">
+          <div class="progress-bar" id="quizProgress" style="width:0%"></div>
         </div>
-        <p>Gegeben ist die Funktionsschar $f_t(x) = x^2 - 2tx + 3t$, $t \in \mathbb{R}$.</p>
-        <ol type="a">
-          <li>Bestimme die Extrempunkte $E_t$ in Abhängigkeit von $t$.</li>
-          <li>Berechne die Gleichung der Ortskurve.</li>
-        </ol>
-        <button class="btn-solution" data-target="sol1">Lösung anzeigen</button>
-        <div class="solution" id="sol1">
-          <div class="sol-step">
-            <strong>a) Extrempunkte:</strong><br>
-            $f_t'(x) = 2x - 2t = 0 \Rightarrow x_E = t$<br>
-            $f_t''(x) = 2 > 0$ → Tiefpunkt<br>
-            $y_E = t^2 - 2t^2 + 3t = -t^2 + 3t$<br>
-            $$E_t = (t,\; -t^2 + 3t)$$
+        <span class="progress-text" id="quizProgressText">Aufgabe 1 von 5</span>
+        <span class="score-badge" id="scoreBadge">0 Pkt.</span>
+      </div>
+
+      <!-- Aufgabe 1 -->
+      <div class="quiz-card" id="q1">
+        <div class="quiz-card-header">
+          <div class="q-number">1</div>
+          <div class="q-meta">
+            <h3>Welche Aussage gilt f&#xFC;r \( f_t(x) = t \cdot x^2 \) mit \( t &gt; 0 \)?</h3>
+            <span class="q-difficulty leicht">Leicht</span>
           </div>
-          <div class="sol-step">
-            <strong>b) Ortskurve:</strong><br>
-            $x = t \Rightarrow t = x$ einsetzen:<br>
-            $$y = -x^2 + 3x$$
+        </div>
+        <div class="quiz-card-body">
+          <div class="options-grid">
+            <button class="option-btn" data-q="1" data-val="a">Die Parabel &#xF6;ffnet nach unten</button>
+            <button class="option-btn" data-q="1" data-val="b">Die Parabel &#xF6;ffnet nach oben</button>
+            <button class="option-btn" data-q="1" data-val="c">Die Parabel hat zwei Nullstellen</button>
+            <button class="option-btn" data-q="1" data-val="d">Der Scheitelpunkt liegt bei \((1, t)\)</button>
           </div>
+          <div class="feedback-box" id="fb1"></div>
+          <div class="solution-box" id="sol1">
+            <h4>&#x1F4DA; L&#xF6;sung</h4>
+            <ol>
+              <li>F&#xFC;r \( t &gt; 0 \) ist der Koeffizient vor \( x^2 \) positiv.</li>
+              <li>Eine Parabel \( f(x) = a \cdot x^2 \) &#xF6;ffnet nach <strong>oben</strong>, wenn \( a &gt; 0 \).</li>
+              <li>Der Scheitelpunkt liegt bei \((0, 0)\), die einzige Nullstelle ebenfalls.</li>
+            </ol>
+          </div>
+        </div>
+        <div class="quiz-card-footer">
+          <button class="btn btn-secondary btn-sm" onclick="showSolution(1)">&#x1F4A1; L&#xF6;sung zeigen</button>
+          <button class="btn btn-primary btn-sm" id="next1" onclick="nextQuestion(2)" style="display:none">Weiter &#x2192;</button>
         </div>
       </div>
 
-      <div class="aufgabe" id="a2">
-        <div class="aufgabe-header">
-          <span class="aufgabe-num">Aufgabe 2</span>
-          <span class="aufgabe-tag">Nullstellen</span>
-        </div>
-        <p>Gegeben ist die Funktionsschar $f_a(x) = x^2 - a^2$, $a \in \mathbb{R}$.</p>
-        <ol type="a">
-          <li>Berechne die Nullstellen in Abhängigkeit von $a$.</li>
-          <li>Für welche Werte von $a$ hat $f_a$ keine reellen Nullstellen?</li>
-        </ol>
-        <button class="btn-solution" data-target="sol2">Lösung anzeigen</button>
-        <div class="solution" id="sol2">
-          <div class="sol-step">
-            <strong>a) Nullstellen:</strong><br>
-            $x^2 = a^2 \Rightarrow x = \pm |a|$<br>
-            Für $a \neq 0$: zwei Nullstellen $x_1 = a$, $x_2 = -a$<br>
-            Für $a = 0$: eine Nullstelle $x = 0$
-          </div>
-          <div class="sol-step">
-            <strong>b)</strong> Da $a^2 \geq 0$ für alle $a \in \mathbb{R}$, hat $f_a$ immer mindestens eine Nullstelle. Es gibt keinen Wert von $a$, für den keine reellen Nullstellen existieren.
+      <!-- Aufgabe 2 -->
+      <div class="quiz-card" id="q2" style="display:none">
+        <div class="quiz-card-header">
+          <div class="q-number">2</div>
+          <div class="q-meta">
+            <h3>Gib die Ableitung von \( f_t(x) = t \cdot x^2 - 2t \cdot x \) an.</h3>
+            <span class="q-difficulty leicht">Leicht</span>
           </div>
         </div>
-      </div>
-
-      <div class="aufgabe" id="a3">
-        <div class="aufgabe-header">
-          <span class="aufgabe-num">Aufgabe 3</span>
-          <span class="aufgabe-tag">Schar & Ortskurve</span>
+        <div class="quiz-card-body">
+          <div class="options-grid">
+            <button class="option-btn" data-q="2" data-val="a">\( f_t'(x) = 2tx \)</button>
+            <button class="option-btn" data-q="2" data-val="b">\( f_t'(x) = 2t \cdot x - 2t \)</button>
+            <button class="option-btn" data-q="2" data-val="c">\( f_t'(x) = tx^2 - 2t \)</button>
+            <button class="option-btn" data-q="2" data-val="d">\( f_t'(x) = t \cdot x - 2 \)</button>
+          </div>
+          <div class="feedback-box" id="fb2"></div>
+          <div class="solution-box" id="sol2">
+            <h4>&#x1F4DA; L&#xF6;sung</h4>
+            <ol>
+              <li>Ableite \( t \cdot x^2 \): ergibt \( 2t \cdot x \)</li>
+              <li>Ableite \( -2t \cdot x \): ergibt \( -2t \)</li>
+              <li>Zusammen: \( f_t'(x) = 2tx - 2t \)</li>
+            </ol>
+          </div>
         </div>
-        <p>Gegeben ist $f_t(x) = x^3 - 3t^2 x$, $t > 0$.</p>
-        <ol type="a">
-          <li>Bestimme alle Extrempunkte der Schar.</li>
-          <li>Zeige, dass alle Hochpunkte auf der Ortskurve $y = 2x$ liegen.</li>
-        </ol>
-        <button class="btn-solution" data-target="sol3">Lösung anzeigen</button>
-        <div class="solution" id="sol3">
-          <div class="sol-step">
-            <strong>a) Extrempunkte:</strong><br>
-            $f_t'(x) = 3x^2 - 3t^2 = 0 \Rightarrow x = \pm t$<br>
-            $f_t''(x) = 6x$<br>
-            $x = -t$: $f_t''(-t) = -6t < 0$ → Hochpunkt<br>
-            $x = +t$: $f_t''(t) = 6t > 0$ → Tiefpunkt<br>
-            Hochpunkt: $y_H = (-t)^3 - 3t^2(-t) = -t^3 + 3t^3 = 2t^3$<br>
-            $$H_t = (-t,\; 2t^3)$$
-          </div>
-          <div class="sol-step">
-            <strong>b) Ortskurve:</strong><br>
-            $x = -t \Rightarrow t = -x$<br>
-            $y = 2(-x)^3 = -2x^3$<br>
-            Prüfung: $y = 2t^3$ und $x = -t$, also $t = -x$, $y = 2(-x)^3 = -2x^3$<br>
-            Für $x < 0$ (da $t > 0$): $y = -2x^3 > 0$ ✓
-          </div>
+        <div class="quiz-card-footer">
+          <button class="btn btn-secondary btn-sm" onclick="showSolution(2)">&#x1F4A1; L&#xF6;sung zeigen</button>
+          <button class="btn btn-primary btn-sm" id="next2" onclick="nextQuestion(3)" style="display:none">Weiter &#x2192;</button>
         </div>
       </div>
 
-      <div class="aufgabe" id="a4">
-        <div class="aufgabe-header">
-          <span class="aufgabe-num">Aufgabe 4</span>
-          <span class="aufgabe-tag">Gemeinsamer Punkt</span>
-        </div>
-        <p>Die Funktionsschar $f_t(x) = (t-1)x^2 + 2x$, $t \in \mathbb{R}$.</p>
-        <p>Bestimme alle Punkte, durch die <em>jede</em> Kurve der Schar verläuft (gemeinsame Punkte).</p>
-        <button class="btn-solution" data-target="sol4">Lösung anzeigen</button>
-        <div class="solution" id="sol4">
-          <div class="sol-step">
-            Gemeinsame Punkte erfüllen $f_t(x) = y$ für alle $t$.<br>
-            $f_t(x) = (t-1)x^2 + 2x = t \cdot x^2 - x^2 + 2x$<br>
-            Damit dies für alle $t$ gleich ist, muss der $t$-Anteil verschwinden:<br>
-            $x^2 = 0 \Rightarrow x = 0$<br>
-            $f_t(0) = 0$<br>
-            $$\Rightarrow P = (0,\; 0)$$
-            Alle Kurven der Schar gehen durch den Ursprung.
+      <!-- Aufgabe 3 -->
+      <div class="quiz-card" id="q3" style="display:none">
+        <div class="quiz-card-header">
+          <div class="q-number">3</div>
+          <div class="q-meta">
+            <h3>
+              Bestimme die Extremstelle von \( f_t(x) = t \cdot x^2 - 2t \cdot x \).
+              Gib die x-Koordinate ein:
+            </h3>
+            <span class="q-difficulty mittel">Mittel</span>
           </div>
         </div>
-      </div>
-
-      <div class="aufgabe" id="a5">
-        <div class="aufgabe-header">
-          <span class="aufgabe-num">Aufgabe 5</span>
-          <span class="aufgabe-tag">Schwer</span>
+        <div class="quiz-card-body">
+          <div class="q-formula-display">\( f_t(x) = t \cdot x^2 - 2t \cdot x \)</div>
+          <div class="quiz-input-wrap">
+            <input type="text" class="quiz-input" id="input3" placeholder="x = ?" />
+            <button class="btn btn-primary btn-sm" onclick="checkInput(3, '1')">Pr&#xFC;fen</button>
+          </div>
+          <div class="feedback-box" id="fb3"></div>
+          <div class="solution-box" id="sol3">
+            <h4>&#x1F4DA; L&#xF6;sung</h4>
+            <ol>
+              <li>\( f_t'(x) = 2tx - 2t = 2t(x-1) \)</li>
+              <li>Nullstelle: \( 2t(x-1) = 0 \Rightarrow x = 1 \) (f&#xFC;r \(t \neq 0\))</li>
+              <li>\( f_t''(x) = 2t \): Vorzeichen abh&#xE4;ngig von \(t\)</li>
+              <li>Extremstelle bei \( \mathbf{x = 1} \) f&#xFC;r alle \(t \neq 0\)</li>
+            </ol>
+          </div>
         </div>
-        <p>Gegeben: $f_t(x) = \dfrac{x^2}{t} + t$, $t > 0$.</p>
-        <ol type="a">
-          <li>Zeige, dass alle Extrempunkte auf der $y$-Achse liegen.</li>
-          <li>Bestimme die Ortskurve der Extrempunkte.</li>
-          <li>Zeige, dass $f_t(x) \geq 2|x|$ für alle $x, t > 0$ gilt.</li>
-        </ol>
-        <button class="btn-solution" data-target="sol5">Lösung anzeigen</button>
-        <div class="solution" id="sol5">
-          <div class="sol-step">
-            <strong>a)</strong> $f_t'(x) = \frac{2x}{t} = 0 \Rightarrow x_E = 0$<br>
-            → Alle Extrempunkte haben $x_E = 0$, liegen also auf der $y$-Achse. ✓
-          </div>
-          <div class="sol-step">
-            <strong>b)</strong> $y_E = f_t(0) = \frac{0}{t} + t = t$<br>
-            $E_t = (0,\; t)$ für $t > 0$<br>
-            Ortskurve: $x = 0$, $y = t > 0$ → die positive $y$-Achse
-          </div>
-          <div class="sol-step">
-            <strong>c)</strong> Nach der AM-GM-Ungleichung gilt: $\frac{x^2}{t} + t \geq 2\sqrt{\frac{x^2}{t} \cdot t} = 2\sqrt{x^2} = 2|x|$ ✓
-          </div>
+        <div class="quiz-card-footer">
+          <button class="btn btn-secondary btn-sm" onclick="showSolution(3)">&#x1F4A1; L&#xF6;sung zeigen</button>
+          <button class="btn btn-primary btn-sm" id="next3" onclick="nextQuestion(4)" style="display:none">Weiter &#x2192;</button>
         </div>
       </div>
 
+      <!-- Aufgabe 4 -->
+      <div class="quiz-card" id="q4" style="display:none">
+        <div class="quiz-card-header">
+          <div class="q-number">4</div>
+          <div class="q-meta">
+            <h3>Ortskurve: Alle Extrempunkte von \( f_t(x) = t \cdot x^2 - 2t \cdot x \) liegen auf &#x2026;</h3>
+            <span class="q-difficulty mittel">Mittel</span>
+          </div>
+        </div>
+        <div class="quiz-card-body">
+          <div class="q-formula-display">
+            Extremstelle: \( x_E = 1 \), Extremwert: \( y_E = f_t(1) = t - 2t = -t \)
+          </div>
+          <div class="options-grid">
+            <button class="option-btn" data-q="4" data-val="a">der Geraden \( y = x - 1 \)</button>
+            <button class="option-btn" data-q="4" data-val="b">der Geraden \( x = 1 \)</button>
+            <button class="option-btn" data-q="4" data-val="c">der Parabel \( y = -x^2 \)</button>
+            <button class="option-btn" data-q="4" data-val="d">dem Punkt \( (1, 0) \)</button>
+          </div>
+          <div class="feedback-box" id="fb4"></div>
+          <div class="solution-box" id="sol4">
+            <h4>&#x1F4DA; L&#xF6;sung</h4>
+            <ol>
+              <li>Der Extrempunkt hat die Koordinaten \( (1,\; -t) \).</li>
+              <li>Die x-Koordinate ist stets \(1\), unabh&#xE4;ngig von \(t\).</li>
+              <li>Die y-Koordinate \(-t\) durchl&#xE4;uft alle reellen Zahlen.</li>
+              <li>Daher liegen alle Extrempunkte auf der vertikalen Geraden \( x = 1 \).</li>
+            </ol>
+          </div>
+        </div>
+        <div class="quiz-card-footer">
+          <button class="btn btn-secondary btn-sm" onclick="showSolution(4)">&#x1F4A1; L&#xF6;sung zeigen</button>
+          <button class="btn btn-primary btn-sm" id="next4" onclick="nextQuestion(5)" style="display:none">Weiter &#x2192;</button>
+        </div>
+      </div>
+
+      <!-- Aufgabe 5 -->
+      <div class="quiz-card" id="q5" style="display:none">
+        <div class="quiz-card-header">
+          <div class="q-number">5</div>
+          <div class="q-meta">
+            <h3>
+              F&#xFC;r welchen Parameterwert \(a\) hat \( f_a(x) = x^3 - ax \) genau einen Wendepunkt,
+              aber keine Extrempunkte?
+            </h3>
+            <span class="q-difficulty schwer">Schwer</span>
+          </div>
+        </div>
+        <div class="quiz-card-body">
+          <div class="options-grid">
+            <button class="option-btn" data-q="5" data-val="a">\( a = 1 \)</button>
+            <button class="option-btn" data-q="5" data-val="b">\( a &gt; 0 \)</button>
+            <button class="option-btn" data-q="5" data-val="c">\( a = 0 \)</button>
+            <button class="option-btn" data-q="5" data-val="d">\( a &lt; 0 \)</button>
+          </div>
+          <div class="feedback-box" id="fb5"></div>
+          <div class="solution-box" id="sol5">
+            <h4>&#x1F4DA; L&#xF6;sung</h4>
+            <ol>
+              <li>\( f_a'(x) = 3x^2 - a \); Extrema bei \( 3x^2 = a \)</li>
+              <li>F&#xFC;r \( a &gt; 0 \): zwei reelle Extremstellen vorhanden.</li>
+              <li>F&#xFC;r \( a = 0 \): \( f_a'(x) = 3x^2 \geq 0 \) &#x2013; kein Vorzeichenwechsel, <strong>kein Extremum</strong>.</li>
+              <li>F&#xFC;r \( a &lt; 0 \): keine reellen L&#xF6;sungen &#x2013; ebenfalls kein Extremum.</li>
+              <li>Wendepunkt: \( f_a''(x) = 6x = 0 \Rightarrow x = 0 \) f&#xFC;r alle \(a\).</li>
+              <li>Gesucht: kein Extremum, Wendepunkt vorhanden &#x2192; \( \mathbf{a = 0} \).</li>
+            </ol>
+          </div>
+        </div>
+        <div class="quiz-card-footer">
+          <button class="btn btn-secondary btn-sm" onclick="showSolution(5)">&#x1F4A1; L&#xF6;sung zeigen</button>
+          <button class="btn btn-primary btn-sm" id="next5" onclick="showResult()" style="display:none">Ergebnis sehen &#x2192;</button>
+        </div>
+      </div>
+
+      <!-- Ergebnis -->
+      <div class="quiz-result" id="quizResult">
+        <div class="star-row" id="starRow">&#x2B50;&#x2B50;&#x2B50;</div>
+        <div class="result-score" id="resultScore">0<span>/5</span></div>
+        <div class="result-msg" id="resultMsg">Super gemacht!</div>
+        <div class="result-sub" id="resultSub">Du hast alle Aufgaben gemeistert.</div>
+        <button class="btn btn-outline" onclick="resetQuiz()">&#x1F504; Nochmal versuchen</button>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="container">
-    <p>Interaktive Lernwebsite · Funktionsscharen · Mathematik Sekundarstufe II</p>
-    <p class="footer-sub">Erstellt zum Lernen und Üben · Viel Erfolg! 🎓</p>
-  </div>
+<!-- ===== FOOTER ===== -->
+<footer>
+  <p>
+    <strong>Funktionsscharen</strong> &#x2013; Interaktives Lernportal f&#xFC;r den Mathematikunterricht &nbsp;|&nbsp;
+    Erstellt mit HTML5 Canvas &amp; MathJax &nbsp;|&nbsp;
+    <span style="color:rgba(255,255,255,0.4);">Keine externen Daten werden gespeichert</span>
+  </p>
 </footer>
 
 <script src="app.js"></script>
