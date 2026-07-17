@@ -1,0 +1,11 @@
+node_modules/
+.next/
+out/
+.env
+.env.local
+.DS_Store
+
+# Reference material scraped from godaylight.com — layout/design study only, never ship
+reference/
+.playwright-mcp/
+.vercel

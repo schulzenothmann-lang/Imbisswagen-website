@@ -1,0 +1,115 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --color-graphit: #23241f;
+  --color-kreide: #f2f2f0;
+  --color-beton: #f2f1ee;
+  --color-anthrazit: #3d3d35;
+  --color-stahl: #6e6a5e;
+
+  /* shadcn/ui-Tokens, auf die bestehende MINO-Palette gemappt */
+  --color-background: var(--color-beton);
+  --color-foreground: var(--color-graphit);
+  --color-card: var(--color-kreide);
+  --color-card-foreground: var(--color-graphit);
+  --color-popover: var(--color-beton);
+  --color-popover-foreground: var(--color-graphit);
+  --color-primary: var(--color-graphit);
+  --color-primary-foreground: var(--color-kreide);
+  --color-secondary: var(--color-beton);
+  --color-secondary-foreground: var(--color-graphit);
+  --color-muted: #dcdcd8;
+  --color-muted-foreground: var(--color-stahl);
+  --color-accent: #dcdcd8;
+  --color-accent-foreground: var(--color-graphit);
+  --color-destructive: #b3261e;
+  --color-destructive-foreground: var(--color-kreide);
+  --color-border: #d7d7d3;
+  --color-input: #d7d7d3;
+  --color-ring: var(--color-graphit);
+
+  --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme inline {
+  --font-serif: var(--font-serif-src);
+  --font-sans: var(--font-sans-src);
+}
+
+body {
+  background: var(--color-beton);
+  color: var(--color-graphit);
+}
+
+html.dark {
+  --color-graphit: #f3efe6;
+  --color-kreide: #171815;
+  --color-beton: #10110e;
+  --color-anthrazit: #d6d0c4;
+  --color-stahl: #a8a195;
+  --color-background: var(--color-beton);
+  --color-foreground: var(--color-graphit);
+  --color-card: var(--color-kreide);
+  --color-card-foreground: var(--color-graphit);
+  --color-popover: #171815;
+  --color-popover-foreground: var(--color-graphit);
+  --color-primary: var(--color-graphit);
+  --color-primary-foreground: #10110e;
+  --color-secondary: #1e1f1a;
+  --color-secondary-foreground: var(--color-graphit);
+  --color-muted: #2a2b25;
+  --color-muted-foreground: var(--color-stahl);
+  --color-accent: #2a2b25;
+  --color-accent-foreground: var(--color-graphit);
+  --color-border: #34352e;
+  --color-input: #34352e;
+  --color-ring: var(--color-graphit);
+  color-scheme: dark;
+}
+
+html.dark img,
+html.dark video {
+  filter: brightness(0.88) contrast(1.04);
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
