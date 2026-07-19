@@ -71,10 +71,6 @@ export default async function WarteraumPage({
             Freischalten
           </Button>
         </form>
-
-        <p className="mt-12 font-sans text-xs text-graphit/40">
-          Erik Nothmann &amp; Mika Schulze · Kirchweg 22, 28201 Bremen
-        </p>
       </div>
     </main>
   );
