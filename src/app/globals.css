@@ -97,6 +97,15 @@ html.dark video {
   animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* iOS Safari zoomt beim Fokus automatisch in Formularfelder unter 16 px. */
+@media (max-width: 639px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
 @keyframes accordion-down {
   from {
     height: 0;

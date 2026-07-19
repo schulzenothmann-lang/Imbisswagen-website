@@ -60,9 +60,8 @@ export default async function WarteraumPage({
             type="password"
             name="password"
             required
-            autoFocus
             placeholder="Passwort"
-            className="h-12 w-full rounded-sm border border-graphit/15 bg-kreide px-4 text-center font-sans text-sm text-graphit outline-none transition-colors focus:border-graphit/50"
+            className="h-12 w-full rounded-sm border border-graphit/15 bg-kreide px-4 text-center font-sans text-base text-graphit outline-none transition-colors focus:border-graphit/50 sm:text-sm"
           />
           {hasError && (
             <p className="font-sans text-sm text-destructive">Falsches Passwort, bitte erneut versuchen.</p>
