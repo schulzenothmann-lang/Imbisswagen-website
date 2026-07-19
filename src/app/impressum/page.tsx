@@ -30,7 +30,7 @@ export default function ImpressumPage() {
           </h1>
 
           <p className="mt-6 rounded-sm border border-dashed border-graphit/25 bg-kreide/40 p-5 font-sans text-sm text-graphit/60">
-            <LocalizedCopy text="Diese Seite enthält noch Platzhalter. Vor dem Livegang müssen alle Angaben durch die echten, rechtlich verbindlichen Firmendaten ersetzt werden (§ 5 TMG / § 18 MStV)." />
+            <LocalizedCopy text="Die Gründung als UG (haftungsbeschränkt) befindet sich in Vorbereitung. Handelsregistereintrag und Umsatzsteuer-ID werden ergänzt, sobald sie vorliegen." />
           </p>
 
           <div className="mt-10 flex flex-col gap-8 font-sans text-sm leading-7 text-graphit/80">

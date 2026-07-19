@@ -22,7 +22,7 @@ export default function DatenschutzPage() {
           </h1>
 
           <p className="mt-6 rounded-sm border border-dashed border-graphit/25 bg-kreide/40 p-5 font-sans text-sm text-graphit/60">
-            <LocalizedCopy text="Diese Erklärung beschreibt den aktuellen technischen Stand der Website (Stand: keine Analyse-Tools, kein Tracking, keine Cookies). Verantwortliche Stelle und Hosting-Anbieter sind noch Platzhalter und müssen vor dem Livegang ergänzt werden. Bei neuen Diensten (z. B. Formularversand über einen Server, Analytics, Newsletter) muss dieser Text entsprechend erweitert werden." />
+            <LocalizedCopy text="Diese Erklärung beschreibt den aktuellen technischen Stand der Website. Die Gründung als UG (haftungsbeschränkt) befindet sich in Vorbereitung. Bei neuen Diensten (z. B. Formularversand über einen Server, Analytics, Newsletter) muss dieser Text entsprechend erweitert werden." />
           </p>
 
           <div className="mt-10 flex flex-col gap-8 font-sans text-sm leading-7 text-graphit/80">
@@ -62,7 +62,7 @@ export default function DatenschutzPage() {
             <div>
               <h2 className="font-sans text-base font-bold text-graphit"><LocalizedCopy text="4. Cookies & Analyse-Tools" /></h2>
               <p className="mt-2">
-                <LocalizedCopy text="Diese Website setzt aktuell keine Cookies und keine Analyse- oder Tracking-Tools ein." />
+                <LocalizedCopy text="Diese Website setzt keine Analyse- oder Tracking-Tools ein. Solange sich die Website im Aufbau befindet, verwenden wir ein technisch notwendiges Cookie (mino_access), das ausschließlich den vorab per Passwort erteilten Zugriff auf die Vorschau speichert. Es findet keine Auswertung statt, das Cookie wird nicht zu Marketing- oder Analysezwecken genutzt (Art. 6 Abs. 1 lit. f DSGVO)." />
               </p>
             </div>
 

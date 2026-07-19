@@ -698,11 +698,11 @@ const copyTranslations: Record<string, LocalizedCopy> = {
     fr: "Notre objectif n'est pas de rendre la planification aussi compliquée que possible. Notre objectif est que vous obteniez un équipement adapté à votre produit, votre budget et votre prochaine étape.",
     nl: "Ons doel is niet om zo ingewikkeld mogelijk te plannen. Ons doel is dat je uitrusting krijgt die past bij je product, je budget en je volgende stap.",
   },
-  "Diese Seite enthält noch Platzhalter. Vor dem Livegang müssen alle Angaben durch die echten, rechtlich verbindlichen Firmendaten ersetzt werden (§ 5 TMG / § 18 MStV).": {
-    de: "Diese Seite enthält noch Platzhalter. Vor dem Livegang müssen alle Angaben durch die echten, rechtlich verbindlichen Firmendaten ersetzt werden (§ 5 TMG / § 18 MStV).",
-    en: "This page still contains placeholders. Before launch, all details must be replaced with the real, legally binding company information (§ 5 TMG / § 18 MStV).",
-    fr: "Cette page contient encore des espaces réservés. Avant la mise en ligne, toutes les informations doivent être remplacées par les données réelles et juridiquement contraignantes de l'entreprise (§ 5 TMG / § 18 MStV).",
-    nl: "Deze pagina bevat nog tijdelijke aanduidingen. Voor livegang moeten alle gegevens worden vervangen door de echte, juridisch bindende bedrijfsgegevens (§ 5 TMG / § 18 MStV).",
+  "Die Gründung als UG (haftungsbeschränkt) befindet sich in Vorbereitung. Handelsregistereintrag und Umsatzsteuer-ID werden ergänzt, sobald sie vorliegen.": {
+    de: "Die Gründung als UG (haftungsbeschränkt) befindet sich in Vorbereitung. Handelsregistereintrag und Umsatzsteuer-ID werden ergänzt, sobald sie vorliegen.",
+    en: "The founding of the UG (haftungsbeschränkt) is currently underway. The commercial register entry and VAT ID will be added once available.",
+    fr: "La création de l'UG (à responsabilité limitée) est en cours. L'inscription au registre du commerce et le numéro de TVA seront ajoutés dès qu'ils seront disponibles.",
+    nl: "De oprichting als UG (beperkte aansprakelijkheid) is in voorbereiding. Handelsregisterinschrijving en btw-nummer worden aangevuld zodra deze beschikbaar zijn.",
   },
   "Angaben gemäß § 5 TMG": { de: "Angaben gemäß § 5 TMG", en: "Information according to § 5 TMG", fr: "Informations conformément au § 5 TMG", nl: "Informatie volgens § 5 TMG" },
   "Vertreten durch": { de: "Vertreten durch", en: "Represented by", fr: "Représenté par", nl: "Vertegenwoordigd door" },
@@ -729,11 +729,11 @@ const copyTranslations: Record<string, LocalizedCopy> = {
     nl: ". Wij zijn niet verplicht en niet bereid deel te nemen aan geschillenbeslechtingsprocedures voor een consumentenarbitragecommissie.",
   },
   "Datenschutzerklärung": { de: "Datenschutzerklärung", en: "Privacy policy", fr: "Politique de confidentialité", nl: "Privacyverklaring" },
-  "Diese Erklärung beschreibt den aktuellen technischen Stand der Website (Stand: keine Analyse-Tools, kein Tracking, keine Cookies). Verantwortliche Stelle und Hosting-Anbieter sind noch Platzhalter und müssen vor dem Livegang ergänzt werden. Bei neuen Diensten (z. B. Formularversand über einen Server, Analytics, Newsletter) muss dieser Text entsprechend erweitert werden.": {
-    de: "Diese Erklärung beschreibt den aktuellen technischen Stand der Website (Stand: keine Analyse-Tools, kein Tracking, keine Cookies). Verantwortliche Stelle und Hosting-Anbieter sind noch Platzhalter und müssen vor dem Livegang ergänzt werden. Bei neuen Diensten (z. B. Formularversand über einen Server, Analytics, Newsletter) muss dieser Text entsprechend erweitert werden.",
-    en: "This policy describes the current technical state of the website (status: no analytics tools, no tracking, no cookies). The controller and hosting provider are still placeholders and must be completed before launch. If new services are added, such as server-based form delivery, analytics or newsletters, this text must be expanded accordingly.",
-    fr: "Cette déclaration décrit l'état technique actuel du site (aucun outil d'analyse, aucun suivi, aucun cookie). Le responsable et l'hébergeur sont encore des espaces réservés et doivent être complétés avant la mise en ligne. Si de nouveaux services sont ajoutés, par exemple envoi de formulaire via serveur, analytics ou newsletter, ce texte devra être complété.",
-    nl: "Deze verklaring beschrijft de huidige technische staat van de website (geen analysetools, geen tracking, geen cookies). De verwerkingsverantwoordelijke en hostingprovider zijn nog tijdelijke aanduidingen en moeten voor livegang worden aangevuld. Bij nieuwe diensten, zoals formulierverzending via een server, analytics of nieuwsbrief, moet deze tekst worden uitgebreid.",
+  "Diese Erklärung beschreibt den aktuellen technischen Stand der Website. Die Gründung als UG (haftungsbeschränkt) befindet sich in Vorbereitung. Bei neuen Diensten (z. B. Formularversand über einen Server, Analytics, Newsletter) muss dieser Text entsprechend erweitert werden.": {
+    de: "Diese Erklärung beschreibt den aktuellen technischen Stand der Website. Die Gründung als UG (haftungsbeschränkt) befindet sich in Vorbereitung. Bei neuen Diensten (z. B. Formularversand über einen Server, Analytics, Newsletter) muss dieser Text entsprechend erweitert werden.",
+    en: "This policy describes the current technical state of the website. The founding of the UG (haftungsbeschränkt) is currently underway. If new services are added, such as server-based form delivery, analytics or newsletters, this text must be expanded accordingly.",
+    fr: "Cette déclaration décrit l'état technique actuel du site. La création de l'UG (à responsabilité limitée) est en cours. Si de nouveaux services sont ajoutés, par exemple envoi de formulaire via serveur, analytics ou newsletter, ce texte devra être complété.",
+    nl: "Deze verklaring beschrijft de huidige technische staat van de website. De oprichting als UG (beperkte aansprakelijkheid) is in voorbereiding. Bij nieuwe diensten, zoals formulierverzending via een server, analytics of nieuwsbrief, moet deze tekst worden uitgebreid.",
   },
   "1. Verantwortliche Stelle": { de: "1. Verantwortliche Stelle", en: "1. Controller", fr: "1. Responsable du traitement", nl: "1. Verwerkingsverantwoordelijke" },
   "2. Hosting": { de: "2. Hosting", en: "2. Hosting", fr: "2. Hébergement", nl: "2. Hosting" },
@@ -751,11 +751,11 @@ const copyTranslations: Record<string, LocalizedCopy> = {
     nl: "Het contactformulier op deze website verzendt je invoer niet naar een van onze servers, maar opent je lokale e-mailprogramma met een vooraf ingevuld bericht. De daadwerkelijke verzending gebeurt rechtstreeks vanuit je e-mailprogramma naar {email}. Wij slaan formulierinvoer nooit op onze servers op; de door jou verzonden e-mail wordt verwerkt om je aanvraag te behandelen (art. 6 lid 1 sub b of f AVG).",
   },
   "4. Cookies & Analyse-Tools": { de: "4. Cookies & Analyse-Tools", en: "4. Cookies & analytics tools", fr: "4. Cookies & outils d'analyse", nl: "4. Cookies & analysetools" },
-  "Diese Website setzt aktuell keine Cookies und keine Analyse- oder Tracking-Tools ein.": {
-    de: "Diese Website setzt aktuell keine Cookies und keine Analyse- oder Tracking-Tools ein.",
-    en: "This website currently does not use cookies, analytics tools or tracking tools.",
-    fr: "Ce site n'utilise actuellement aucun cookie ni outil d'analyse ou de suivi.",
-    nl: "Deze website gebruikt momenteel geen cookies en geen analyse- of trackingtools.",
+  "Diese Website setzt keine Analyse- oder Tracking-Tools ein. Solange sich die Website im Aufbau befindet, verwenden wir ein technisch notwendiges Cookie (mino_access), das ausschließlich den vorab per Passwort erteilten Zugriff auf die Vorschau speichert. Es findet keine Auswertung statt, das Cookie wird nicht zu Marketing- oder Analysezwecken genutzt (Art. 6 Abs. 1 lit. f DSGVO).": {
+    de: "Diese Website setzt keine Analyse- oder Tracking-Tools ein. Solange sich die Website im Aufbau befindet, verwenden wir ein technisch notwendiges Cookie (mino_access), das ausschließlich den vorab per Passwort erteilten Zugriff auf die Vorschau speichert. Es findet keine Auswertung statt, das Cookie wird nicht zu Marketing- oder Analysezwecken genutzt (Art. 6 Abs. 1 lit. f DSGVO).",
+    en: "This website does not use analytics or tracking tools. While the website is under construction, we use a technically necessary cookie (mino_access) that solely stores the password-based access granted to the preview. No evaluation takes place, and the cookie is not used for marketing or analytics purposes (Art. 6 para. 1 lit. f GDPR).",
+    fr: "Ce site n'utilise aucun outil d'analyse ou de suivi. Tant que le site est en construction, nous utilisons un cookie techniquement nécessaire (mino_access) qui stocke uniquement l'accès à l'aperçu accordé au préalable par mot de passe. Aucune évaluation n'a lieu, le cookie n'est pas utilisé à des fins de marketing ou d'analyse (art. 6 al. 1 let. f RGPD).",
+    nl: "Deze website gebruikt geen analyse- of trackingtools. Zolang de website in opbouw is, gebruiken wij een technisch noodzakelijke cookie (mino_access) die uitsluitend de vooraf via wachtwoord verleende toegang tot de preview opslaat. Er vindt geen evaluatie plaats en de cookie wordt niet gebruikt voor marketing- of analysedoeleinden (art. 6 lid 1 sub f AVG).",
   },
   "5. Schriftarten": { de: "5. Schriftarten", en: "5. Fonts", fr: "5. Polices", nl: "5. Lettertypen" },
   "Wir verwenden Google-Schriftarten (Libre Franklin, Playfair Display), die lokal über unseren Server ausgeliefert werden. Es findet dazu keine Verbindung zu Servern von Google statt, es werden keine Daten an Google übertragen.": {
