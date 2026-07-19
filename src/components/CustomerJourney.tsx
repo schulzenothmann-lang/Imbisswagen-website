@@ -611,6 +611,80 @@ function JourneyMap({
   );
 }
 
+const mobileLabelClasses: Record<string, string> = {
+  bremen: "right-8 top-1/2 -translate-y-1/2",
+  berlin: "right-8 top-1/2 -translate-y-1/2",
+  koeln: "left-8 top-1/2 -translate-y-1/2",
+  muenchen: "left-8 top-1/2 -translate-y-1/2",
+};
+
+function MobileJourneyMap({
+  selectedStopId,
+  onSelect,
+}: {
+  selectedStopId: string | null;
+  onSelect: (stop: Stop) => void;
+}) {
+  const { region } = useLocaleSettings();
+  const tc = (text: string) => translateCopy(text, region.languageCode);
+
+  return (
+    <div className="relative mx-auto aspect-[720/980] w-full max-w-sm overflow-hidden rounded-sm border border-graphit/10 bg-kreide/25">
+      <svg
+        aria-hidden
+        viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
+        className="h-full w-full"
+        fill="none"
+      >
+        <path d={outlinePath} className="fill-graphit/4 stroke-graphit/12" strokeWidth="2" />
+      </svg>
+
+      {stops.filter((stop) => stop.routeStop).map((stop) => {
+        const { x, y } = project([stop.lon, stop.lat]);
+        const isSelected = selectedStopId === stop.id;
+
+        return (
+          <button
+            key={stop.id}
+            type="button"
+            aria-label={`${stop.city}: ${tc("Bild anzeigen")}`}
+            aria-pressed={isSelected}
+            onClick={() => onSelect(stop)}
+            className="group absolute z-10 flex h-11 w-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-graphit"
+            style={{
+              left: `${(x / MAP_WIDTH) * 100}%`,
+              top: `${(y / MAP_HEIGHT) * 100}%`,
+            }}
+          >
+            <span
+              aria-hidden
+              className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition-colors ${
+                isSelected
+                  ? "border-graphit bg-graphit"
+                  : "border-graphit/25 bg-kreide group-hover:border-graphit/60"
+              }`}
+            >
+              <span className={`h-1.5 w-1.5 rounded-full ${isSelected ? "bg-kreide" : "bg-graphit"}`} />
+            </span>
+            <span
+              aria-hidden
+              className={`pointer-events-none absolute whitespace-nowrap rounded-sm border px-2 py-1 font-sans text-xs font-bold shadow-sm backdrop-blur ${
+                mobileLabelClasses[stop.id] ?? "left-8 top-1/2 -translate-y-1/2"
+              } ${
+                isSelected
+                  ? "border-graphit bg-graphit text-kreide"
+                  : "border-graphit/10 bg-beton/90 text-graphit"
+              }`}
+            >
+              {stop.city}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export function CustomerJourney() {
   const { region } = useLocaleSettings();
   const tc = (text: string) => translateCopy(text, region.languageCode);
@@ -621,8 +695,10 @@ export function CustomerJourney() {
   const [progress, setProgress] = useState(0);
   const [engaged, setEngaged] = useState(false);
   const [marker, setMarker] = useState<{ x: number; y: number; angle: number } | null>(null);
+  const [selectedMobileStopId, setSelectedMobileStopId] = useState<string | null>(null);
+  const mobileCardRef = useRef<HTMLDivElement>(null);
   const reduced = useRef(false);
-  const revealedStops = stops.filter((stop) => stop.routeStop && progress >= (stop.arrivalProgress ?? 0) - 0.015);
+  const selectedMobileStop = stops.find((stop) => stop.id === selectedMobileStopId) ?? null;
 
   useEffect(() => {
     reduced.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -630,6 +706,10 @@ export function CustomerJourney() {
   }, []);
 
   useEffect(() => {
+    if (!window.matchMedia("(min-width: 1024px)").matches) {
+      return;
+    }
+
     if (reduced.current) {
       setProgress(1);
       setEngaged(true);
@@ -676,6 +756,19 @@ export function CustomerJourney() {
     });
   }, [progress, pathLen]);
 
+  useEffect(() => {
+    if (!selectedMobileStopId) return;
+
+    const frame = requestAnimationFrame(() => {
+      mobileCardRef.current?.scrollIntoView({
+        behavior: reduced.current ? "auto" : "smooth",
+        block: "nearest",
+      });
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [selectedMobileStopId]);
+
   return (
     <section ref={sectionRef} className="relative mx-auto w-full max-w-7xl border-t border-graphit/10 px-6 pt-24 pb-24 lg:px-10 lg:pt-32 lg:pb-32">
       <div className="max-w-md">
@@ -707,16 +800,12 @@ export function CustomerJourney() {
       </div>
 
       <div className="mt-14 lg:hidden">
-        <div className="mx-auto aspect-[720/980] w-full max-w-sm">
-          <JourneyMap pathRef={pathRef} pathLen={pathLen} progress={progress} engaged={engaged} marker={marker} />
-        </div>
-        <ol className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2">
-          {revealedStops.map((stop) => (
-            <li key={stop.id}>
-              <CustomerCard stop={stop} />
-            </li>
-          ))}
-        </ol>
+        <MobileJourneyMap selectedStopId={selectedMobileStopId} onSelect={(stop) => setSelectedMobileStopId(stop.id)} />
+        {selectedMobileStop && (
+          <div ref={mobileCardRef} className="mx-auto mt-6 max-w-sm">
+            <CustomerCard key={selectedMobileStop.id} stop={selectedMobileStop} />
+          </div>
+        )}
       </div>
     </section>
   );
