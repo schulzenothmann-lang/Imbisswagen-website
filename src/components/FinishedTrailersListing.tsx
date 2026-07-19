@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Filter, SlidersHorizontal, Star } from "lucide-react";
+import { ArrowRight, Filter, SlidersHorizontal } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { cn } from "@/lib/utils";
@@ -79,14 +79,15 @@ export function FinishedTrailersListing({
 
   return (
     <main className="min-h-screen bg-beton pt-20 text-graphit lg:pt-[4.25rem]">
-      <section className="mx-auto w-full max-w-7xl px-6 pt-16 pb-8 lg:px-10 lg:pt-24">
-        <div className="flex max-w-2xl flex-col gap-5">
-          <h1 className="text-4xl leading-[0.95] tracking-normal lg:text-6xl">
-            <span className="font-serif font-medium">{t("choosePrefix")}</span>
-            <br />
+      <section className="mx-auto w-full max-w-7xl px-6 pt-10 pb-8 lg:px-10 lg:pt-14">
+        <div className="flex max-w-2xl flex-col gap-3">
+          <h1 className="text-3xl leading-tight tracking-normal lg:text-4xl">
+            <span className="font-serif font-medium">{t("choosePrefix")}</span>{" "}
             <span className="font-sans font-black tracking-tight">{tc(heading)}</span>
           </h1>
-          <p className="font-sans text-lg leading-8 text-graphit/70">{tc(intro)}</p>
+          <p className="max-w-xl font-sans text-sm leading-6 text-graphit/60 lg:text-base lg:leading-7">
+            {tc(intro)}
+          </p>
         </div>
       </section>
 
@@ -198,12 +199,16 @@ export function FinishedTrailersListing({
                       <LocalizedPrice value={product.price} />
                     </p>
 
-                    <div className="mt-5 flex items-center gap-1.5">
-                      {[0, 1, 2, 3, 4].map((star) => (
-                        <Star key={star} className="h-3.5 w-3.5 fill-graphit text-graphit" aria-hidden="true" />
-                      ))}
-                      <Link href={product.href} className="ml-2 font-sans text-[0.82rem] text-graphit underline underline-offset-2">
+                    <div className="mt-4 flex items-center justify-between gap-4 border-t border-graphit/10 pt-4">
+                      <p className="font-sans text-[0.8rem] text-graphit/60">
+                        {product.length} · {tc(product.weight)}
+                      </p>
+                      <Link
+                        href={product.href}
+                        className="inline-flex items-center gap-1.5 font-sans text-[0.82rem] font-semibold text-graphit transition-opacity hover:opacity-70"
+                      >
                         {t("request")}
+                        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                       </Link>
                     </div>
                   </div>

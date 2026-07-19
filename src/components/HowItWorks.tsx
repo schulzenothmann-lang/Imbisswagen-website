@@ -143,7 +143,7 @@ export function HowItWorks() {
           const textContent = (
             <div
               className={`flex flex-col items-start gap-4 transition-all duration-700 ease-out ${
-                isActive ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"
+                isActive ? "translate-y-0 opacity-100" : "translate-y-2 opacity-35"
               }`}
             >
               <h3 className="font-sans text-2xl font-black tracking-tight lg:text-4xl">{tc(s.heading)}</h3>
@@ -160,7 +160,7 @@ export function HowItWorks() {
             <div
               className={`relative aspect-16/9 overflow-hidden rounded-sm bg-graphit/[0.03] transition-all duration-700 ease-out ${
                 s.imageFit === "contain" ? "p-6 lg:p-8" : ""
-              } ${isActive ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"}`}
+              } ${isActive ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-2 opacity-35"}`}
             >
               {s.gallery ? (
                 <>
@@ -225,7 +225,7 @@ export function HowItWorks() {
             <li
               key={s.station}
               data-index={index}
-              className="relative lg:min-h-[118svh] last:lg:min-h-[92svh]"
+              className="relative lg:min-h-[88svh] last:lg:min-h-[72svh]"
             >
               <article
                 ref={(node) => {
@@ -237,7 +237,7 @@ export function HowItWorks() {
 
                 <div
                   className={`relative z-10 flex h-[5.5rem] w-[5.5rem] items-center justify-center rounded-full bg-beton transition-all duration-700 ease-out max-lg:order-first ${
-                    isActive ? "scale-100 opacity-100" : "scale-95 opacity-0"
+                    isActive ? "scale-100 opacity-100" : "scale-90 opacity-40"
                   } lg:col-start-2 lg:justify-self-center`}
                 >
                   <div

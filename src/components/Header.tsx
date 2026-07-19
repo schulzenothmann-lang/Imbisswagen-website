@@ -300,20 +300,20 @@ export function Header() {
                 <Menu className="size-4" />
               </Button>
             </SheetTrigger>
-            <SheetContent className="overflow-y-auto bg-beton">
+            <SheetContent className="flex flex-col overflow-y-auto bg-beton">
               <SheetHeader>
                 <SheetTitle>
                   <Logo />
                 </SheetTitle>
               </SheetHeader>
 
-              <div className="my-6 flex flex-col gap-6">
-                <Accordion type="single" collapsible className="flex w-full flex-col gap-4">
+              <div className="mt-6 flex flex-1 flex-col">
+                <Accordion type="single" collapsible className="flex w-full flex-col">
                   <AccordionItem value="modelle" className="border-graphit/10">
-                    <AccordionTrigger className="py-0 font-sans text-base font-normal text-graphit hover:no-underline">
+                    <AccordionTrigger className="py-4 font-sans text-base font-normal text-graphit hover:no-underline">
                       {t("navModels")}
                     </AccordionTrigger>
-                    <AccordionContent className="mt-2">
+                    <AccordionContent className="pb-3">
                       <Link
                         href="/modelle"
                         className="mb-1 flex select-none rounded-sm p-3 font-sans text-sm font-semibold text-graphit outline-none transition-colors hover:bg-graphit/5"
@@ -342,10 +342,10 @@ export function Header() {
                   </AccordionItem>
 
                   <AccordionItem value="sofort-verfuegbar" className="border-graphit/10">
-                    <AccordionTrigger className="py-0 font-sans text-base font-normal text-graphit hover:no-underline">
+                    <AccordionTrigger className="py-4 font-sans text-base font-normal text-graphit hover:no-underline">
                       {t("navAvailable")}
                     </AccordionTrigger>
-                    <AccordionContent className="mt-2">
+                    <AccordionContent className="pb-3">
                       <Link
                         href="/sofort-verfuegbar"
                         className="mb-1 flex select-none rounded-sm p-3 font-sans text-sm font-semibold text-graphit outline-none transition-colors hover:bg-graphit/5"
@@ -378,10 +378,10 @@ export function Header() {
                   </AccordionItem>
 
                   <AccordionItem value="mieten" className="border-graphit/10">
-                    <AccordionTrigger className="py-0 font-sans text-base font-normal text-graphit hover:no-underline">
+                    <AccordionTrigger className="py-4 font-sans text-base font-normal text-graphit hover:no-underline">
                       {t("navRent")}
                     </AccordionTrigger>
-                    <AccordionContent className="mt-2">
+                    <AccordionContent className="pb-3">
                       <Link
                         href="/mieten"
                         className="mb-1 flex select-none rounded-sm p-3 font-sans text-sm font-semibold text-graphit outline-none transition-colors hover:bg-graphit/5"
@@ -414,40 +414,40 @@ export function Header() {
                   </AccordionItem>
                 </Accordion>
 
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col">
                   {navLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}
-                      className="rounded-sm px-3 py-2 font-sans text-base font-normal text-graphit transition-colors hover:bg-graphit/5"
+                      className="border-b border-graphit/10 py-4 font-sans text-base font-normal text-graphit transition-colors hover:text-graphit/70"
                     >
                       {link.href === "/ueber-uns" ? t("navAbout") : t("navContact")}
                     </Link>
                   ))}
                 </div>
 
-                <div className="border-t border-graphit/10 py-4">
-                  <div className="grid grid-cols-2 justify-start">
+                <div className="mt-auto flex flex-col gap-5 pt-8 pb-2">
+                  <div className="flex items-center justify-between">
+                    <RegionSwitcher />
+                    <ThemeToggle />
+                  </div>
+
+                  <Button asChild size="lg" className="w-full">
+                    <Link href="/konfigurator">{t("ctaConfigure")}</Link>
+                  </Button>
+
+                  <div className="flex items-center justify-center gap-6">
                     {mobileExtraLinks.map((link) => (
                       <Link
                         key={link.name}
                         href={link.url}
-                        className="inline-flex h-10 items-center gap-2 rounded-sm px-3 py-2 font-sans text-sm text-graphit/60 transition-colors hover:bg-graphit/5 hover:text-graphit"
+                        className="font-sans text-xs text-graphit/50 transition-colors hover:text-graphit"
                       >
                         {link.url === "/impressum" ? t("legalNotice") : t("privacy")}
                       </Link>
                     ))}
                   </div>
                 </div>
-
-                <div className="flex items-center gap-4 border-t border-graphit/10 pt-4">
-                  <RegionSwitcher />
-                  <ThemeToggle />
-                </div>
-
-                <Button asChild size="lg" className="w-full">
-                  <Link href="/konfigurator">{t("ctaConfigure")}</Link>
-                </Button>
               </div>
             </SheetContent>
           </Sheet>

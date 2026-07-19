@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { Eyebrow } from "@/components/ui/eyebrow";
 import { LocalizedPrice } from "./LocalizedPrice";
 import { useLocaleSettings } from "./LocaleProvider";
@@ -22,70 +23,57 @@ type ProductTypeLandingProps = {
   items: [ProductTypeLink, ProductTypeLink];
 };
 
-export function ProductTypeLanding({ eyebrow, title, intro, items }: ProductTypeLandingProps) {
+export function ProductTypeLanding({ eyebrow, intro, items }: ProductTypeLandingProps) {
   const { t } = useLocaleSettings();
   const isRent = eyebrow === "Mieten";
   const localizedEyebrow = isRent ? t("navRent") : t("navAvailable");
-  const localizedTitle =
-    title === "Wähle aus, was du kaufen möchtest."
-      ? t("chooseBuyTitle")
-      : title === "Wähle aus, was du mieten möchtest."
-        ? t("chooseRentTitle")
-        : title;
+  const localizedTitle = isRent ? t("rentQuestionTitle") : t("buyQuestionTitle");
   const localizedIntro = isRent ? t("rentLandingIntro") : t("buyLandingIntro");
 
   return (
-    <main className="min-h-screen bg-beton pt-20 text-graphit lg:pt-[4.25rem]">
-      <section className="mx-auto w-full max-w-7xl px-6 pt-16 pb-24 lg:px-10 lg:pt-24 lg:pb-32">
-        <div className="max-w-2xl">
+    <main className="flex min-h-svh flex-col bg-beton pt-20 text-graphit lg:h-svh lg:pt-[4.25rem]">
+      <section className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 pt-8 pb-6 lg:min-h-0 lg:px-10 lg:pt-10 lg:pb-8">
+        <div className="flex flex-col items-center gap-3 text-center">
           <Eyebrow>{localizedEyebrow}</Eyebrow>
-          <h1 className="mt-4 text-4xl leading-[0.95] tracking-normal lg:text-6xl">
-            <span className="font-serif font-medium">{localizedTitle}</span>
+          <h1 className="font-serif text-3xl font-medium leading-tight tracking-normal lg:text-4xl">
+            {localizedTitle}
           </h1>
-          <p className="mt-6 font-sans text-lg leading-8 text-graphit/70">
-            {intro === "Fertige Imbiss-Anhänger und Verkaufs-Pavillons, die kurzfristig verfügbar sind." ||
-            intro === "Mietbare Imbiss-Anhänger und Verkaufs-Pavillons für Märkte, Events und saisonale Einsätze."
-              ? localizedIntro
-              : intro}
-          </p>
+          <p className="sr-only">{intro || localizedIntro}</p>
         </div>
 
-        <div className="mt-12 grid gap-5 lg:grid-cols-2">
+        <div className="mt-6 grid flex-1 gap-4 sm:grid-cols-2 lg:mt-8 lg:min-h-0 lg:gap-5">
           {items.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="group overflow-hidden rounded-sm border border-graphit/10 bg-kreide/45 transition-colors hover:border-graphit/35"
+              className="group flex min-h-0 flex-col overflow-hidden rounded-sm border border-graphit/10 bg-kreide/45 transition-colors hover:border-graphit/35"
             >
-              <div className="relative flex aspect-[16/10] items-center justify-center bg-beton p-6">
+              <div className="relative min-h-0 flex-1 basis-52 bg-beton sm:basis-64">
                 <Image
                   src={item.image}
                   alt={item.imageAlt}
                   fill
                   priority
                   unoptimized
-                  sizes="(min-width: 1024px) 50vw, 100vw"
-                  className="object-contain p-8 transition-transform duration-500 group-hover:scale-[1.025]"
+                  sizes="(min-width: 640px) 50vw, 100vw"
+                  className="object-contain p-6 transition-transform duration-500 group-hover:scale-[1.03] lg:p-10"
                 />
               </div>
-              <div className="flex flex-col gap-3 p-5 font-sans sm:p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <h2 className="text-2xl font-black tracking-tight text-graphit">
+              <div className="flex items-center justify-between gap-4 border-t border-graphit/10 p-5 font-sans lg:px-6">
+                <div>
+                  <h2 className="text-xl font-black tracking-tight text-graphit lg:text-2xl">
                     {item.title === "Imbissanhänger" ? t("snackTrailerNoHyphen") : t("pavilion")}
                   </h2>
-                  <span className="shrink-0 pt-1 text-sm font-bold text-graphit">
+                  <p className="mt-0.5 text-sm text-graphit/60">
                     <LocalizedPrice value={item.price} />
-                  </span>
+                  </p>
                 </div>
-                <p className="max-w-xl text-sm leading-6 text-graphit/65">
-                  {item.title === "Pavillon"
-                    ? isRent
-                      ? t("pavilionRentalDescription")
-                      : t("pavilionPurchaseDescription")
-                    : isRent
-                      ? t("trailerRentalDescription")
-                      : t("trailerPurchaseDescription")}
-                </p>
+                <span
+                  aria-hidden
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-graphit/20 text-graphit transition-colors duration-200 group-hover:border-graphit group-hover:bg-graphit group-hover:text-kreide"
+                >
+                  <ArrowRight className="h-5 w-5" />
+                </span>
               </div>
             </Link>
           ))}

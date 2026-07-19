@@ -9,3 +9,6 @@ out/
 reference/
 .playwright-mcp/
 .vercel
+
+# TypeScript
+tsconfig.tsbuildinfo

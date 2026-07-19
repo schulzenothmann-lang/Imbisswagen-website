@@ -391,6 +391,18 @@ export const translations = {
     fr: "Choisissez ce que vous souhaitez louer.",
     nl: "Kies wat je wilt huren.",
   },
+  buyQuestionTitle: {
+    de: "Was möchtest du kaufen?",
+    en: "What do you want to buy?",
+    fr: "Que souhaitez-vous acheter ?",
+    nl: "Wat wil je kopen?",
+  },
+  rentQuestionTitle: {
+    de: "Was möchtest du mieten?",
+    en: "What do you want to rent?",
+    fr: "Que souhaitez-vous louer ?",
+    nl: "Wat wil je huren?",
+  },
   buyLandingIntro: {
     de: "Fertige Imbiss-Anhänger und Verkaufs-Pavillons, die kurzfristig verfügbar sind.",
     en: "Ready-made food trailers and sales pavilions available at short notice.",

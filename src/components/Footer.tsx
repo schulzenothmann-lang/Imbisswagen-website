@@ -103,6 +103,19 @@ export function Footer() {
             {t("footerText")}
           </p>
           <p className="font-sans text-sm font-bold text-graphit">— MINO</p>
+          <ul className="mt-2 flex flex-row flex-wrap gap-3">
+            {social.map((s) => (
+              <li key={s.label}>
+                <a
+                  href={s.href}
+                  aria-label={s.label}
+                  className="flex h-8 w-8 items-center justify-center rounded-full border border-graphit/20 text-graphit/70 transition-colors hover:border-graphit hover:text-graphit"
+                >
+                  {s.icon}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4 lg:gap-x-12">
@@ -142,28 +155,12 @@ export function Footer() {
               </ul>
             </div>
           ))}
-          <div className="flex flex-col gap-4">
-            <p className="font-sans text-sm font-bold text-graphit">{t("follow")}</p>
-            <ul className="flex flex-row flex-wrap gap-3">
-              {social.map((s) => (
-                <li key={s.label}>
-                  <a
-                    href={s.href}
-                    aria-label={s.label}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-graphit/20 text-graphit/70 transition-colors hover:border-graphit hover:text-graphit"
-                  >
-                    {s.icon}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
       </div>
 
       <div
         aria-hidden
-        className="pointer-events-none mt-8 -mb-[0.8vw] overflow-hidden select-none lg:mt-12"
+        className="pointer-events-none mt-2 -mb-[0.8vw] overflow-hidden select-none lg:mt-4"
         style={{
           maskImage: "linear-gradient(to bottom, black 20%, transparent 86%)",
           WebkitMaskImage: "linear-gradient(to bottom, black 20%, transparent 86%)",

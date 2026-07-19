@@ -779,6 +779,16 @@ const copyTranslations: Record<string, LocalizedCopy> = {
     fr: "Vous disposez d'un droit d'accès, de rectification, d'effacement et de limitation du traitement de vos données personnelles, ainsi que d'un droit à la portabilité et d'opposition au traitement. Vous avez également le droit de déposer une plainte auprès d'une autorité de contrôle de la protection des données. Contactez {email} à ce sujet.",
     nl: "Je hebt recht op inzage, rectificatie, verwijdering en beperking van de verwerking van je persoonsgegevens, evenals op overdraagbaarheid van gegevens en bezwaar tegen verwerking. Daarnaast heb je het recht om een klacht in te dienen bij een toezichthoudende autoriteit voor gegevensbescherming. Neem hiervoor contact op via {email}.",
   },
+  "Konfigurieren": { de: "Konfigurieren", en: "Configure", fr: "Configurer", nl: "Configureren" },
+  "Details": { de: "Details", en: "Details", fr: "Détails", nl: "Details" },
+  "Im Überblick": { de: "Im Überblick", en: "At a glance", fr: "En un coup d'œil", nl: "In één oogopslag" },
+  "Alle Modelle im Vergleich": {
+    de: "Alle Modelle im Vergleich",
+    en: "All models compared",
+    fr: "Tous les modèles comparés",
+    nl: "Alle modellen vergeleken",
+  },
+  "modular": { de: "modular", en: "modular", fr: "modulaire", nl: "modulair" },
 };
 
 export function translateCopy(text: string, language: LanguageCode) {

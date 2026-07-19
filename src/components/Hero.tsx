@@ -71,7 +71,7 @@ export function Hero() {
   return (
     <section
       ref={heroRef}
-      className="group relative isolate flex h-svh w-full items-center justify-center overflow-clip bg-graphit"
+      className="on-media group relative isolate flex h-svh w-full items-center justify-center overflow-clip bg-graphit"
     >
       <video
         src="/videos/hero.mp4"

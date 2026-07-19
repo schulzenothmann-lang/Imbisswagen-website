@@ -73,6 +73,15 @@ html.dark video {
   filter: brightness(0.88) contrast(1.04);
 }
 
+/* Sektionen über Video/Foto behalten in beiden Themes die dunkle Anmutung —
+   sonst werden die graphit-Overlays im Dark Mode zu einem weißen Schleier. */
+.on-media {
+  --color-graphit: #23241f;
+  --color-kreide: #f2f2f0;
+  --color-beton: #f2f1ee;
+  --color-ring: #f2f2f0;
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;
