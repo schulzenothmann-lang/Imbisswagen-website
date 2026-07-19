@@ -9,7 +9,7 @@ import { CONTACT_EMAIL } from "@/lib/contact";
 import { translateCopy } from "@/lib/localized-content";
 import { useLocaleSettings } from "./LocaleProvider";
 
-const subjects = ["Beratung zu einem Modell", "Fertiger Anhänger", "Konfigurator-Frage", "Sonstiges"];
+const subjects = ["Modellberatung", "Kaufen", "Mieten", "Konfigurator", "Sonstiges"];
 
 const inputClass =
   "h-12 w-full rounded-sm border border-graphit/15 bg-kreide px-4 font-sans text-sm text-graphit placeholder:text-graphit/40 outline-none transition-colors focus:border-graphit/50";
@@ -19,14 +19,18 @@ export function ContactForm({ initialSubject }: { initialSubject?: string }) {
   const tc = (text: string) => translateCopy(text, region.languageCode);
   const [sent, setSent] = useState(false);
   const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
-  const subjectOptions = initialSubject && !subjects.includes(initialSubject) ? [initialSubject, ...subjects] : subjects;
-  const defaultSubject = initialSubject ?? subjects[0];
+  const hasCustomInitialSubject = Boolean(initialSubject && !subjects.includes(initialSubject));
+  const [selectedSubject, setSelectedSubject] = useState(hasCustomInitialSubject ? "Sonstiges" : (initialSubject ?? subjects[0]));
+  const [customSubject, setCustomSubject] = useState(hasCustomInitialSubject ? initialSubject ?? "" : "");
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const selectedSubject = String(data.get("subject") ?? "");
+    const subjectValue =
+      selectedSubject === "Sonstiges" ? String(data.get("customSubject") ?? "").trim() : selectedSubject;
 
-    const subject = `Kontaktanfrage: ${data.get("subject")}`;
+    const subject = `Kontaktanfrage: ${subjectValue}`;
     const body = [
       `Vorname: ${data.get("firstName")}`,
       `Nachname: ${data.get("lastName")}`,
@@ -76,14 +80,37 @@ export function ContactForm({ initialSubject }: { initialSubject?: string }) {
         <label htmlFor="subject" className="font-sans text-sm font-bold text-graphit">
           {tc("Anliegen")}
         </label>
-        <select id="subject" name="subject" defaultValue={defaultSubject} className={inputClass}>
-          {subjectOptions.map((s) => (
+        <select
+          id="subject"
+          name="subject"
+          value={selectedSubject}
+          onChange={(event) => setSelectedSubject(event.target.value)}
+          className={inputClass}
+        >
+          {subjects.map((s) => (
             <option key={s} value={s}>
               {tc(s)}
             </option>
           ))}
         </select>
       </div>
+
+      {selectedSubject === "Sonstiges" && (
+        <div className="flex flex-col gap-2">
+          <label htmlFor="customSubject" className="font-sans text-sm font-bold text-graphit">
+            {tc("Eigenes Anliegen *")}
+          </label>
+          <input
+            id="customSubject"
+            name="customSubject"
+            required
+            value={customSubject}
+            onChange={(event) => setCustomSubject(event.target.value)}
+            className={inputClass}
+            placeholder={tc("Anliegen kurz beschreiben")}
+          />
+        </div>
+      )}
 
       <div className="flex flex-col gap-2">
         <label htmlFor="message" className="font-sans text-sm font-bold text-graphit">
