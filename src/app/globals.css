@@ -97,12 +97,40 @@ html.dark video {
   animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Sichtbarer Tastatur-Fokus für Links (Buttons haben ihren Ring über ui/button) */
+a:focus-visible {
+  outline: 2px solid var(--color-graphit);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
 /* iOS Safari zoomt beim Fokus automatisch in Formularfelder unter 16 px. */
 @media (max-width: 639px) {
   input,
   select,
   textarea {
     font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Prozess-Schritte: sanftes Einrasten nahe der Schrittmitte. "proximity" statt
+   "mandatory", damit schnelles Durchscrollen und Überspringen möglich bleibt.
+   Snap-Punkte existieren nur dort, wo Elemente snap-align setzen. */
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
   }
 }
 

@@ -63,38 +63,40 @@ export default function UeberUnsPage() {
             <p>
               <LocalizedCopy text="Heute möchten wir möglichst vielen Gastronomen helfen, ihr bestehendes Geschäft durch mobile Gastronomie zu erweitern, neue Standorte zu testen oder zusätzlichen Umsatz aufzubauen. Gleichzeitig wollen wir Startups und Jungunternehmer dabei unterstützen, ihr erstes eigenes Projekt greifbar und bezahlbar umzusetzen." />
             </p>
-          </div>
-        </section>
 
-        <section className="border-y border-graphit/10">
-          <div className="mx-auto grid w-full max-w-7xl gap-8 px-6 py-14 md:grid-cols-3 lg:px-10 lg:py-16">
-            {[
-              {
-                label: "Erfahrung",
-                text: "Wir kennen die Anforderungen aus eigener Gastronomie-Praxis.",
-              },
-              {
-                label: "Preis & Leistung",
-                text: "Gute Ausstattung muss wirtschaftlich bleiben und zum Konzept passen.",
-              },
-              {
-                label: "Umsetzung",
-                text: "Vom ersten Paket bis zum individuellen Ausbau denken wir verkaufsnah.",
-              },
-            ].map((item) => (
-              <div key={item.label} className="border-l border-graphit/15 pl-5">
-                <p className="font-sans text-sm font-black tracking-tight text-graphit"><LocalizedCopy text={item.label} /></p>
-                <p className="mt-3 font-sans text-sm leading-6 text-graphit/68"><LocalizedCopy text={item.text} /></p>
-              </div>
-            ))}
+            <dl className="mt-6 grid gap-x-8 gap-y-6 border-t border-graphit/10 pt-8 sm:grid-cols-3">
+              {[
+                {
+                  label: "Erfahrung",
+                  text: "Wir kennen die Anforderungen aus eigener Gastronomie-Praxis.",
+                },
+                {
+                  label: "Preis & Leistung",
+                  text: "Gute Ausstattung muss wirtschaftlich bleiben und zum Konzept passen.",
+                },
+                {
+                  label: "Umsetzung",
+                  text: "Vom ersten Paket bis zum individuellen Ausbau denken wir verkaufsnah.",
+                },
+              ].map((item) => (
+                <div key={item.label}>
+                  <dt className="font-sans text-xs font-semibold tracking-[0.14em] text-graphit/55 uppercase">
+                    <LocalizedCopy text={item.label} />
+                  </dt>
+                  <dd className="mt-2.5 font-sans text-sm leading-6 text-graphit/70">
+                    <LocalizedCopy text={item.text} />
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </section>
 
         <section className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-24 lg:grid-cols-[1.05fr_0.95fr] lg:px-10 lg:py-32">
           <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-kreide/40">
             <Image
-              src="/images/ueber-uns/hero-ueber-uns.jpeg"
-              alt="Verkaufsstand als praktisches Gastronomie-Setup"
+              src="/images/prozess/anhaenger-uebergabe.png"
+              alt="Fertiger MINO Anhänger vor der Übergabe"
               fill
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-cover"

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { BadgeEuro, CalendarRange, Menu, Minimize2, Star, Store, Truck, Utensils } from "lucide-react";
 
@@ -20,7 +20,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { LocalizedPrice } from "./LocalizedPrice";
 import { useLocaleSettings } from "./LocaleProvider";
 import { RegionSwitcher } from "./RegionSwitcher";
@@ -101,11 +101,6 @@ const navLinks = [
   { href: "/kontakt", label: "Kontakt" },
 ];
 
-const mobileExtraLinks = [
-  { name: "Impressum", url: "/impressum" },
-  { name: "Datenschutz", url: "/datenschutz" },
-];
-
 function Logo() {
   return (
     <Link href="/" aria-label="Startseite" className="flex items-center font-sans text-xl font-black tracking-tight text-graphit lg:text-2xl">
@@ -116,11 +111,17 @@ function Logo() {
 
 export function Header() {
   const router = useRouter();
+  const pathname = usePathname();
   const { region, t } = useLocaleSettings();
   const tc = (text: string) => translateCopy(text, region.languageCode);
   const [hidden, setHidden] = useState(false);
   const hoveredRef = useRef(false);
   const lastScrollY = useRef(0);
+
+  // "Du bist hier": aktiven Navigationspunkt anhand des Pfads markieren.
+  const isActive = (prefixes: string[]) =>
+    prefixes.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+  const activeUnderline = "underline decoration-graphit/40 decoration-[1.5px] underline-offset-[0.55rem]";
 
   useEffect(() => {
     lastScrollY.current = window.scrollY;
@@ -164,7 +165,12 @@ export function Header() {
           <NavigationMenu>
             <NavigationMenuList className="gap-8 space-x-0">
               <NavigationMenuItem>
-                <NavigationMenuTrigger onClick={() => router.push("/modelle")}>{t("navModels")}</NavigationMenuTrigger>
+                <NavigationMenuTrigger
+                  onClick={() => router.push("/modelle")}
+                  className={isActive(["/modelle"]) ? activeUnderline : undefined}
+                >
+                  {t("navModels")}
+                </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <ul className="w-96 p-3">
                     <NavigationMenuLink asChild>
@@ -195,7 +201,10 @@ export function Header() {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger onClick={() => router.push("/sofort-verfuegbar")}>
+                <NavigationMenuTrigger
+                  onClick={() => router.push("/sofort-verfuegbar")}
+                  className={isActive(["/sofort-verfuegbar", "/kaufen"]) ? activeUnderline : undefined}
+                >
                   {t("navAvailable")}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -232,7 +241,10 @@ export function Header() {
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger onClick={() => router.push("/mieten")}>
+                <NavigationMenuTrigger
+                  onClick={() => router.push("/mieten")}
+                  className={isActive(["/mieten"]) ? activeUnderline : undefined}
+                >
                   {t("navRent")}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -273,7 +285,9 @@ export function Header() {
                   <NavigationMenuLink asChild>
                     <Link
                       href={link.href}
-                      className="font-sans text-[0.98rem] leading-none font-normal tracking-normal whitespace-nowrap text-graphit/85 transition-opacity hover:opacity-60"
+                      className={`font-sans text-[0.98rem] leading-none font-normal tracking-normal whitespace-nowrap text-graphit/85 transition-opacity hover:opacity-60 ${
+                        isActive([link.href]) ? activeUnderline : ""
+                      }`}
                     >
                       {link.href === "/ueber-uns" ? t("navAbout") : t("navContact")}
                     </Link>
@@ -310,105 +324,159 @@ export function Header() {
               <div className="mt-6 flex flex-1 flex-col">
                 <Accordion type="single" collapsible className="flex w-full flex-col">
                   <AccordionItem value="modelle" className="border-graphit/10">
-                    <AccordionTrigger className="py-4 font-sans text-base font-normal text-graphit hover:no-underline">
-                      {t("navModels")}
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-3">
-                      <Link
-                        href="/modelle"
-                        className="mb-1 flex select-none rounded-sm p-3 font-sans text-sm font-semibold text-graphit outline-none transition-colors hover:bg-graphit/5"
-                      >
-                        {t("overview")}
-                      </Link>
-                      {models.map((m) => (
+                    <div className="flex items-center">
+                      <SheetClose asChild>
                         <Link
-                          key={m.id}
-                          href={`/modelle/${m.id}`}
-                          className="flex select-none gap-4 rounded-sm p-3 leading-none outline-none transition-colors hover:bg-graphit/5"
+                          href="/modelle"
+                          className={`flex-1 py-4 font-sans text-base text-graphit transition-colors hover:text-graphit/70 ${
+                            isActive(["/modelle"]) ? "font-semibold" : "font-normal"
+                          }`}
                         >
-                          <span className="text-graphit/70">{m.icon}</span>
-                          <div>
-                            <div className="flex items-baseline gap-2 font-sans text-sm font-semibold text-graphit">
-                              {m.name}
-                              <span className="font-sans text-xs font-normal text-graphit/60">
-                                <LocalizedPrice value={m.price} />
-                              </span>
-                            </div>
-                            <p className="text-sm leading-snug text-graphit/60">{m.specs}</p>
-                          </div>
+                          {t("navModels")}
                         </Link>
+                      </SheetClose>
+                      <AccordionTrigger
+                        aria-label={`${t("navModels")}: ${t("menuOpen")}`}
+                        className="w-11 flex-none justify-center px-0 py-4 hover:no-underline"
+                      >
+                        <span className="sr-only">{t("overview")}</span>
+                      </AccordionTrigger>
+                    </div>
+                    <AccordionContent className="pb-3">
+                      <SheetClose asChild>
+                        <Link
+                          href="/modelle"
+                          className="mb-1 flex select-none rounded-sm p-3 font-sans text-sm font-semibold text-graphit outline-none transition-colors hover:bg-graphit/5"
+                        >
+                          {t("overview")}
+                        </Link>
+                      </SheetClose>
+                      {models.map((m) => (
+                        <SheetClose key={m.id} asChild>
+                          <Link
+                            href={`/modelle/${m.id}`}
+                            className="flex select-none gap-4 rounded-sm p-3 leading-none outline-none transition-colors hover:bg-graphit/5"
+                          >
+                            <span className="text-graphit/70">{m.icon}</span>
+                            <div>
+                              <div className="flex items-baseline gap-2 font-sans text-sm font-semibold text-graphit">
+                                {m.name}
+                                <span className="font-sans text-xs font-normal text-graphit/60">
+                                  <LocalizedPrice value={m.price} />
+                                </span>
+                              </div>
+                              <p className="text-sm leading-snug text-graphit/60">{m.specs}</p>
+                            </div>
+                          </Link>
+                        </SheetClose>
                       ))}
                     </AccordionContent>
                   </AccordionItem>
 
                   <AccordionItem value="sofort-verfuegbar" className="border-graphit/10">
-                    <AccordionTrigger className="py-4 font-sans text-base font-normal text-graphit hover:no-underline">
-                      {t("navAvailable")}
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-3">
-                      <Link
-                        href="/sofort-verfuegbar"
-                        className="mb-1 flex select-none rounded-sm p-3 font-sans text-sm font-semibold text-graphit outline-none transition-colors hover:bg-graphit/5"
-                      >
-                        {t("overview")}
-                      </Link>
-                      {purchaseLinks.map((item) => (
+                    <div className="flex items-center">
+                      <SheetClose asChild>
                         <Link
-                          key={item.href}
-                          href={item.href}
-                          className="flex select-none gap-4 rounded-sm p-3 leading-none outline-none transition-colors hover:bg-graphit/5"
+                          href="/sofort-verfuegbar"
+                          className={`flex-1 py-4 font-sans text-base text-graphit transition-colors hover:text-graphit/70 ${
+                            isActive(["/sofort-verfuegbar", "/kaufen"]) ? "font-semibold" : "font-normal"
+                          }`}
                         >
-                          <span className="text-graphit/70">{item.icon}</span>
-                          <div>
-                            <div className="flex items-baseline gap-2 font-sans text-sm font-semibold text-graphit">
-                              {item.href.includes("pavillons") ? t("pavilion") : t("snackTrailer")}
-                              <span className="font-sans text-xs font-normal text-graphit/60">
-                                {item.href.includes("pavillons") ? t("cheaperStart") : t("navAvailable")}
-                              </span>
-                            </div>
-                            <p className="text-sm leading-snug text-graphit/60">
-                              {item.href.includes("pavillons")
-                                ? t("pavilionPurchaseDescription")
-                                : t("trailerPurchaseDescription")}
-                            </p>
-                          </div>
+                          {t("navAvailable")}
                         </Link>
+                      </SheetClose>
+                      <AccordionTrigger
+                        aria-label={`${t("navAvailable")}: ${t("menuOpen")}`}
+                        className="w-11 flex-none justify-center px-0 py-4 hover:no-underline"
+                      >
+                        <span className="sr-only">{t("overview")}</span>
+                      </AccordionTrigger>
+                    </div>
+                    <AccordionContent className="pb-3">
+                      <SheetClose asChild>
+                        <Link
+                          href="/sofort-verfuegbar"
+                          className="mb-1 flex select-none rounded-sm p-3 font-sans text-sm font-semibold text-graphit outline-none transition-colors hover:bg-graphit/5"
+                        >
+                          {t("overview")}
+                        </Link>
+                      </SheetClose>
+                      {purchaseLinks.map((item) => (
+                        <SheetClose key={item.href} asChild>
+                          <Link
+                            href={item.href}
+                            className="flex select-none gap-4 rounded-sm p-3 leading-none outline-none transition-colors hover:bg-graphit/5"
+                          >
+                            <span className="text-graphit/70">{item.icon}</span>
+                            <div>
+                              <div className="flex items-baseline gap-2 font-sans text-sm font-semibold text-graphit">
+                                {item.href.includes("pavillons") ? t("pavilion") : t("snackTrailer")}
+                                <span className="font-sans text-xs font-normal text-graphit/60">
+                                  {item.href.includes("pavillons") ? t("cheaperStart") : t("navAvailable")}
+                                </span>
+                              </div>
+                              <p className="text-sm leading-snug text-graphit/60">
+                                {item.href.includes("pavillons")
+                                  ? t("pavilionPurchaseDescription")
+                                  : t("trailerPurchaseDescription")}
+                              </p>
+                            </div>
+                          </Link>
+                        </SheetClose>
                       ))}
                     </AccordionContent>
                   </AccordionItem>
 
                   <AccordionItem value="mieten" className="border-graphit/10">
-                    <AccordionTrigger className="py-4 font-sans text-base font-normal text-graphit hover:no-underline">
-                      {t("navRent")}
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-3">
-                      <Link
-                        href="/mieten"
-                        className="mb-1 flex select-none rounded-sm p-3 font-sans text-sm font-semibold text-graphit outline-none transition-colors hover:bg-graphit/5"
-                      >
-                        {t("overview")}
-                      </Link>
-                      {rentalLinks.map((item) => (
+                    <div className="flex items-center">
+                      <SheetClose asChild>
                         <Link
-                          key={item.href}
-                          href={item.href}
-                          className="flex select-none gap-4 rounded-sm p-3 leading-none outline-none transition-colors hover:bg-graphit/5"
+                          href="/mieten"
+                          className={`flex-1 py-4 font-sans text-base text-graphit transition-colors hover:text-graphit/70 ${
+                            isActive(["/mieten"]) ? "font-semibold" : "font-normal"
+                          }`}
                         >
-                          <span className="text-graphit/70">{item.icon}</span>
-                          <div>
-                            <div className="flex items-baseline gap-2 font-sans text-sm font-semibold text-graphit">
-                              {item.href.includes("pavillons") ? t("pavilion") : t("snackTrailer")}
-                              <span className="font-sans text-xs font-normal text-graphit/60">
-                                {item.href.includes("pavillons") ? t("rentShortTerm") : t("flexibleStart")}
-                              </span>
-                            </div>
-                            <p className="text-sm leading-snug text-graphit/60">
-                              {item.href.includes("pavillons")
-                                ? t("pavilionRentalDescription")
-                                : t("trailerRentalDescription")}
-                            </p>
-                          </div>
+                          {t("navRent")}
                         </Link>
+                      </SheetClose>
+                      <AccordionTrigger
+                        aria-label={`${t("navRent")}: ${t("menuOpen")}`}
+                        className="w-11 flex-none justify-center px-0 py-4 hover:no-underline"
+                      >
+                        <span className="sr-only">{t("overview")}</span>
+                      </AccordionTrigger>
+                    </div>
+                    <AccordionContent className="pb-3">
+                      <SheetClose asChild>
+                        <Link
+                          href="/mieten"
+                          className="mb-1 flex select-none rounded-sm p-3 font-sans text-sm font-semibold text-graphit outline-none transition-colors hover:bg-graphit/5"
+                        >
+                          {t("overview")}
+                        </Link>
+                      </SheetClose>
+                      {rentalLinks.map((item) => (
+                        <SheetClose key={item.href} asChild>
+                          <Link
+                            href={item.href}
+                            className="flex select-none gap-4 rounded-sm p-3 leading-none outline-none transition-colors hover:bg-graphit/5"
+                          >
+                            <span className="text-graphit/70">{item.icon}</span>
+                            <div>
+                              <div className="flex items-baseline gap-2 font-sans text-sm font-semibold text-graphit">
+                                {item.href.includes("pavillons") ? t("pavilion") : t("snackTrailer")}
+                                <span className="font-sans text-xs font-normal text-graphit/60">
+                                  {item.href.includes("pavillons") ? t("rentShortTerm") : t("flexibleStart")}
+                                </span>
+                              </div>
+                              <p className="text-sm leading-snug text-graphit/60">
+                                {item.href.includes("pavillons")
+                                  ? t("pavilionRentalDescription")
+                                  : t("trailerRentalDescription")}
+                              </p>
+                            </div>
+                          </Link>
+                        </SheetClose>
                       ))}
                     </AccordionContent>
                   </AccordionItem>
@@ -416,36 +484,49 @@ export function Header() {
 
                 <div className="flex flex-col">
                   {navLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className="border-b border-graphit/10 py-4 font-sans text-base font-normal text-graphit transition-colors hover:text-graphit/70"
-                    >
-                      {link.href === "/ueber-uns" ? t("navAbout") : t("navContact")}
-                    </Link>
+                    <SheetClose key={link.href} asChild>
+                      <Link
+                        href={link.href}
+                        className={`border-b border-graphit/10 py-4 font-sans text-base text-graphit transition-colors hover:text-graphit/70 ${
+                          isActive([link.href]) ? "font-semibold" : "font-normal"
+                        }`}
+                      >
+                        {link.href === "/ueber-uns" ? t("navAbout") : t("navContact")}
+                      </Link>
+                    </SheetClose>
                   ))}
                 </div>
 
                 <div className="mt-auto flex flex-col gap-5 pt-8 pb-2">
-                  <div className="flex items-center justify-between">
-                    <RegionSwitcher />
-                    <ThemeToggle />
-                  </div>
-
                   <Button asChild size="lg" className="w-full">
-                    <Link href="/konfigurator">{t("ctaConfigure")}</Link>
+                    <SheetClose asChild>
+                      <Link href="/konfigurator">{t("ctaConfigure")}</Link>
+                    </SheetClose>
                   </Button>
 
-                  <div className="flex items-center justify-center gap-6">
-                    {mobileExtraLinks.map((link) => (
-                      <Link
-                        key={link.name}
-                        href={link.url}
-                        className="font-sans text-xs text-graphit/50 transition-colors hover:text-graphit"
-                      >
-                        {link.url === "/impressum" ? t("legalNotice") : t("privacy")}
-                      </Link>
-                    ))}
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <RegionSwitcher placement="up" align="left" />
+                      <SheetClose asChild>
+                        <Link
+                          href="/impressum"
+                          className="font-sans text-xs text-graphit/50 transition-colors hover:text-graphit"
+                        >
+                          {t("legalNotice")}
+                        </Link>
+                      </SheetClose>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <SheetClose asChild>
+                        <Link
+                          href="/datenschutz"
+                          className="font-sans text-xs text-graphit/50 transition-colors hover:text-graphit"
+                        >
+                          {t("privacy")}
+                        </Link>
+                      </SheetClose>
+                      <ThemeToggle />
+                    </div>
                   </div>
                 </div>
               </div>

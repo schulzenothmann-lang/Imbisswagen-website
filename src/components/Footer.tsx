@@ -103,19 +103,6 @@ export function Footer() {
             {t("footerText")}
           </p>
           <p className="font-sans text-sm font-bold text-graphit">— MINO</p>
-          <ul className="mt-2 flex flex-row flex-wrap gap-3">
-            {social.map((s) => (
-              <li key={s.label}>
-                <a
-                  href={s.href}
-                  aria-label={s.label}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-graphit/20 text-graphit/70 transition-colors hover:border-graphit hover:text-graphit"
-                >
-                  {s.icon}
-                </a>
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4 lg:gap-x-12">
@@ -178,22 +165,38 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto flex max-w-7xl flex-col gap-3 border-t border-graphit/10 px-6 py-6 sm:flex-row sm:items-center sm:justify-between lg:px-10">
+      <div className="mx-auto flex max-w-7xl flex-col gap-5 border-t border-graphit/10 px-6 py-6 sm:flex-row sm:items-center sm:justify-between lg:px-10">
         <p className="font-sans text-xs text-graphit/60">
           © 2026 MINO. <span className="font-bold text-graphit">{t("footerRights")}</span>
         </p>
-        <ul className="flex flex-row gap-6">
-          <li>
-            <a href="/impressum" className="font-sans text-xs text-graphit/60 hover:text-graphit">
-              {t("legalNotice")}
-            </a>
-          </li>
-          <li>
-            <a href="/datenschutz" className="font-sans text-xs text-graphit/60 hover:text-graphit">
-              {t("privacy")}
-            </a>
-          </li>
-        </ul>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-4">
+          <ul aria-label={t("follow")} className="flex items-center gap-1.5">
+            {social.map((s) => (
+              <li key={s.label}>
+                <a
+                  href={s.href}
+                  aria-label={s.label}
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-graphit/55 transition-colors hover:bg-graphit/5 hover:text-graphit"
+                >
+                  {s.icon}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <span aria-hidden className="hidden h-4 w-px bg-graphit/15 sm:block" />
+          <ul className="flex flex-row gap-6">
+            <li>
+              <a href="/impressum" className="font-sans text-xs text-graphit/60 hover:text-graphit">
+                {t("legalNotice")}
+              </a>
+            </li>
+            <li>
+              <a href="/datenschutz" className="font-sans text-xs text-graphit/60 hover:text-graphit">
+                {t("privacy")}
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </footer>
   );

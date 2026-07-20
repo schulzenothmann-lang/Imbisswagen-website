@@ -112,7 +112,7 @@ export function ModelsTeaser() {
     <section ref={sectionRef} className="mx-auto flex min-h-[42rem] max-w-7xl flex-col justify-center px-6 py-24 lg:min-h-[calc(100svh-7rem)] lg:px-10 lg:py-32">
       <div className="grid gap-8 lg:grid-cols-[0.9fr_1.35fr] lg:items-start">
         <div className="flex flex-col gap-5">
-          <Eyebrow>{tc("Vier Modelle. Eine Handschrift.")}</Eyebrow>
+          <Eyebrow>{tc("Die Modellreihe")}</Eyebrow>
           <h2 className="text-4xl leading-[0.95] tracking-normal lg:text-6xl">
             <span className="font-serif font-medium">{tc("Ikonisch")}</span>
             <br />

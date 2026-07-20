@@ -136,7 +136,7 @@ export function HowItWorks() {
         </p>
       </div>
 
-      <ol className="relative flex flex-col gap-16 before:absolute before:top-2 before:bottom-2 before:left-1/2 before:hidden before:w-px before:bg-linear-to-b before:from-transparent before:via-graphit/40 before:to-transparent before:shadow-[0_0_22px_rgba(35,36,31,0.22)] lg:gap-0 lg:before:block">
+      <ol className="relative flex flex-col gap-16 before:absolute before:top-2 before:bottom-2 before:left-1/2 before:hidden before:w-px before:bg-linear-to-b before:from-transparent before:via-graphit/40 before:to-transparent before:shadow-[0_0_22px_rgba(35,36,31,0.22)] lg:gap-32 lg:before:block">
         {steps.map((s, index) => {
           const imageFirst = index % 2 === 1;
           const isActive = activeIndex === index;
@@ -222,16 +222,12 @@ export function HowItWorks() {
           );
 
           return (
-            <li
-              key={s.station}
-              data-index={index}
-              className="relative lg:min-h-[88svh] last:lg:min-h-[72svh]"
-            >
+            <li key={s.station} data-index={index} className="relative lg:snap-center">
               <article
                 ref={(node) => {
                   itemRefs.current[index] = node;
                 }}
-                className="grid items-center gap-8 lg:sticky lg:top-[16svh] lg:min-h-[68svh] lg:grid-cols-[minmax(0,1fr)_7rem_minmax(0,1fr)] lg:gap-10"
+                className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_7rem_minmax(0,1fr)] lg:gap-10"
               >
                 <div className="lg:col-start-1">{imageFirst ? imageContent : textContent}</div>
 

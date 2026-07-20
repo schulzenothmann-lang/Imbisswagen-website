@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Eyebrow } from "@/components/ui/eyebrow";
+import { Reveal } from "@/components/ui/reveal";
 import { LocalizedPrice } from "./LocalizedPrice";
 import { useLocaleSettings } from "./LocaleProvider";
 
@@ -42,11 +43,11 @@ export function ProductTypeLanding({ eyebrow, intro, items }: ProductTypeLanding
         </div>
 
         <div className="mt-6 grid flex-1 gap-4 sm:grid-cols-2 lg:mt-8 lg:min-h-0 lg:gap-5">
-          {items.map((item) => (
+          {items.map((item, index) => (
+            <Reveal key={item.href} delayMs={index * 90} className="flex min-h-0 flex-col">
             <Link
-              key={item.href}
               href={item.href}
-              className="group flex min-h-0 flex-col overflow-hidden rounded-sm border border-graphit/10 bg-kreide/45 transition-colors hover:border-graphit/35"
+              className="group flex min-h-0 flex-1 flex-col overflow-hidden rounded-sm border border-graphit/10 bg-kreide/45 transition-colors hover:border-graphit/35"
             >
               <div className="relative min-h-0 flex-1 basis-52 bg-beton sm:basis-64">
                 <Image
@@ -76,6 +77,7 @@ export function ProductTypeLanding({ eyebrow, intro, items }: ProductTypeLanding
                 </span>
               </div>
             </Link>
+            </Reveal>
           ))}
         </div>
       </section>

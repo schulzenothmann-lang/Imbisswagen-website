@@ -9,7 +9,13 @@ function FlagIcon({ iso }: { iso: string }) {
   return <span className={`fi fi-${iso} h-3 w-4 shrink-0 rounded-none`} />;
 }
 
-export function RegionSwitcher() {
+export function RegionSwitcher({
+  placement = "down",
+  align = "right",
+}: {
+  placement?: "up" | "down";
+  align?: "left" | "right";
+}) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const { region: selected, setRegionCode, ratesLive, t } = useLocaleSettings();
@@ -47,7 +53,11 @@ export function RegionSwitcher() {
       </button>
 
       {open && (
-        <ul className="absolute top-full right-0 z-50 mt-3 w-64 overflow-hidden rounded-sm border border-graphit/10 bg-beton shadow-[0_8px_28px_rgba(0,0,0,0.18)]">
+        <ul
+          className={`absolute z-50 w-64 overflow-hidden rounded-sm border border-graphit/10 bg-beton shadow-[0_8px_28px_rgba(0,0,0,0.18)] ${
+            placement === "up" ? "bottom-full mb-3" : "top-full mt-3"
+          } ${align === "left" ? "left-0" : "right-0"}`}
+        >
           <li className="border-b border-graphit/10 px-4 py-2 font-sans text-[11px] font-bold tracking-wide text-graphit/45 uppercase">
             {ratesLive ? t("currencyLive") : t("currencyFallback")}
           </li>
