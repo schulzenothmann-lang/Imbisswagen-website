@@ -13,29 +13,7 @@ export default function MietenPage() {
   return (
     <>
       <Header />
-      <ProductTypeLanding
-        eyebrow="Mieten"
-        title="Wähle aus, was du mieten möchtest."
-        intro="Mietbare Imbiss-Anhänger und Verkaufs-Pavillons für Märkte, Events und saisonale Einsätze."
-        items={[
-          {
-            title: "Imbissanhänger",
-            description: "Mietbare Anhänger für Events, Saisonbetrieb und Übergangslösungen.",
-            href: "/mieten/imbiss-anhaenger",
-            image: "/images/modelle/basis.png",
-            imageAlt: "MINO Imbissanhänger zur Miete",
-            price: "ab 1.490 € / Monat",
-          },
-          {
-            title: "Pavillon",
-            description: "Verkaufs-Pavillons kurzfristig mieten und mit geringeren Einstiegskosten testen.",
-            href: "/mieten/pavillons",
-            image: "/images/produkte/verkaufs-pavillon.png",
-            imageAlt: "MINO Verkaufs-Pavillon zur Miete",
-            price: "ab 390 € / Monat",
-          },
-        ]}
-      />
+      <ProductTypeLanding eyebrow="Mieten" />
       <Footer />
     </>
   );

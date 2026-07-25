@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -19,38 +20,35 @@ const models = [
   {
     id: "basis",
     imageId: "basis",
-    name: "Basis",
+    name: "Classic",
     length: "5 M",
     weight: "1,5 T",
     price: "ab 21.900 €",
     bodyOffset: "-7%",
+    width: 1106,
+    height: 512,
   },
   {
     id: "standard",
     imageId: "standard",
-    name: "Standard",
-    length: "5,5 M",
-    weight: "1,7 T",
-    price: "ab 25.900 €",
-    bodyOffset: "-7%",
-  },
-  {
-    id: "premium",
-    imageId: "premium",
     name: "Premium",
     length: "5,5 M",
     weight: "1,7 T",
     price: "ab 25.900 €",
     bodyOffset: "-7%",
+    width: 1282,
+    height: 587,
   },
   {
     id: "xl",
     imageId: "xl",
-    name: "X-ray",
+    name: "Base",
     length: "1,5 M",
     weight: "500 KG",
     price: "12900",
     bodyOffset: "-10%",
+    width: 1300,
+    height: 779,
   },
 ];
 
@@ -58,7 +56,6 @@ export function ModelsTeaser() {
   const { region, t } = useLocaleSettings();
   const tc = (text: string) => translateCopy(text, region.languageCode);
   const sectionRef = useRef<HTMLElement>(null);
-  const autoFinishedRef = useRef(false);
   const [active, setActive] = useState(0);
   const canPrev = active > 0;
   const canNext = active < models.length - 1;
@@ -68,44 +65,21 @@ export function ModelsTeaser() {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
 
-    let frame = 0;
+    const section = sectionRef.current;
+    if (!section) return;
 
-    function updateFromScroll() {
-      frame = 0;
-      if (autoFinishedRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setActive(1);
+        observer.disconnect();
+      },
+      // Erst wechseln, wenn der Classic-Anhänger vollständig im Viewport steht.
+      { rootMargin: "-14% 0px -85% 0px", threshold: 0 },
+    );
 
-      const section = sectionRef.current;
-      if (!section) return;
-
-      const rect = section.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const start = viewportHeight * 0.78;
-      const end = viewportHeight * 0.08;
-      const rawProgress = (start - rect.top) / (start - end);
-      const progress = Math.min(1, Math.max(0, rawProgress));
-      const nextActive = progress >= 0.5 ? 1 : 0;
-
-      if (nextActive === 1) {
-        autoFinishedRef.current = true;
-      }
-
-      setActive((currentIndex) => (currentIndex === nextActive ? currentIndex : nextActive));
-    }
-
-    function requestUpdate() {
-      if (frame) return;
-      frame = window.requestAnimationFrame(updateFromScroll);
-    }
-
-    updateFromScroll();
-    window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
-
-    return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
-    };
+    observer.observe(section);
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -134,20 +108,19 @@ export function ModelsTeaser() {
 
       <div className="mt-12 lg:mt-14">
         <div className="relative overflow-hidden">
-          <div
-            className="flex transition-transform duration-500 ease-out"
-            style={{ transform: `translateX(calc(-${active} * 100%))` }}
-          >
-            {models.map((m) => (
-              <div key={m.id} className="flex h-40 w-full shrink-0 items-end justify-center sm:h-52 lg:h-[17.5rem] xl:h-[19rem]">
-                <img
-                  src={`/images/modelle/${m.imageId}.png`}
-                  alt={`MINO ${m.name}`}
-                  className="h-full w-auto max-w-full object-contain"
-                  style={{ transform: `translateX(${m.bodyOffset})` }}
-                />
-              </div>
-            ))}
+          <div className="flex h-40 w-full items-end justify-center sm:h-52 lg:h-[17.5rem] xl:h-[19rem]">
+            <div key={current.id} className="animate-fade-up flex h-full w-full items-end justify-center">
+              <Image
+                src={`/images/modelle/${current.imageId}.png`}
+                alt={`MINO ${current.name}`}
+                width={current.width}
+                height={current.height}
+                sizes="(max-width: 639px) calc(100vw - 3rem), (max-width: 1023px) 70vw, 640px"
+                loading="lazy"
+                className="h-full w-auto max-w-full object-contain"
+                style={{ transform: `translateX(${current.bodyOffset})` }}
+              />
+            </div>
           </div>
         </div>
 

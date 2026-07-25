@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Check } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Eyebrow } from "@/components/ui/eyebrow";
 import { Reveal } from "@/components/ui/reveal";
 import { LocalizedPrice } from "@/components/LocalizedPrice";
 import { useLocaleSettings } from "@/components/LocaleProvider";
@@ -124,24 +126,27 @@ function ModelStage({ model, index }: { model: ModelData; index: number }) {
   );
 }
 
-function ClosingGuidance() {
+export function ModelsClosingCta() {
   const { region, t } = useLocaleSettings();
   const tc = (text: string) => translateCopy(text, region.languageCode);
 
   return (
-    <Reveal className="mt-28 lg:mt-40">
-      <div className="mx-auto flex max-w-2xl flex-col items-center gap-5 border-t border-graphit/10 pt-16 text-center lg:pt-20">
-        <h3 className="font-sans text-2xl font-black tracking-tight lg:text-3xl">
-          {tc("Unsicher, welches Modell passt?")}
-        </h3>
-        <p className="max-w-lg font-sans text-sm leading-6 text-graphit/65 lg:text-base lg:leading-7">
+    <Reveal as="section" className="relative isolate overflow-clip bg-tinte px-6 py-24 text-kreide lg:px-10 lg:py-32">
+      <div className="mx-auto flex max-w-3xl flex-col items-start gap-8">
+        <Eyebrow onDark>{tc("Dein nächster Schritt")}</Eyebrow>
+        <h2 className="text-4xl leading-[0.95] tracking-normal lg:text-6xl">
+          <span className="font-serif font-medium">{tc("Unsicher,")}</span>
+          <br />
+          <span className="font-sans font-black tracking-tight">{tc("welches Modell passt?")}</span>
+        </h2>
+        <p className="max-w-lg font-sans text-lg leading-8 text-kreide/80">
           {tc("In einem kurzen Gespräch finden wir gemeinsam das Modell, das zu deinem Konzept passt — unverbindlich und kostenlos.")}
         </p>
-        <div className="mt-2 flex flex-col gap-3 sm:flex-row">
-          <Button asChild variant="outline">
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <Button asChild variant="inverse" size="lg">
             <Link href="/kontakt?anliegen=Modellberatung">{tc("Beratung anfragen")}</Link>
           </Button>
-          <Button asChild>
+          <Button asChild variant="outlineOnDark" size="lg">
             <Link href="/konfigurator">{t("ctaConfigure")}</Link>
           </Button>
         </div>
@@ -150,16 +155,104 @@ function ClosingGuidance() {
   );
 }
 
+function PavilionStage({ index }: { index: number }) {
+  const { region, t } = useLocaleSettings();
+  const tc = (text: string) => translateCopy(text, region.languageCode);
+
+  return (
+    <Reveal>
+      <article id="pavillon" className="grid scroll-mt-28 items-center gap-10 lg:grid-cols-2 lg:gap-20">
+        <Link
+          href="/kaufen/pavillons"
+          aria-label={tc("Verkaufs-Pavillon ansehen")}
+          className="group flex flex-col items-center px-2 lg:order-1 lg:px-6"
+        >
+          <div className="relative aspect-[4/3] w-full max-w-2xl overflow-hidden rounded-sm bg-kreide/50">
+            <Image
+              src="/images/produkte/verkaufs-pavillon.png"
+              alt={tc("MINO Verkaufs-Pavillon")}
+              fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover transition-transform duration-500 ease-brand group-hover:scale-[1.02]"
+            />
+            <div className="absolute inset-0 ring-1 ring-inset ring-graphit/10" />
+          </div>
+          <DimensionLine label="AB 3 × 3 M" className="mt-8 w-2/3 max-w-xs" />
+        </Link>
+
+        <div className="flex flex-col items-start gap-5 lg:order-2">
+          <p className="flex items-center gap-3 font-sans text-xs font-bold tracking-[0.18em] text-graphit/45 uppercase">
+            <span className="tabular-nums">{String(index + 1).padStart(2, "0")}</span>
+            <span aria-hidden className="h-px w-6 bg-graphit/30" />
+            <span>{tc("Der flexible Einstieg")}</span>
+          </p>
+
+          <h2 className="font-sans text-4xl font-black tracking-tight lg:text-5xl">
+            {tc("Verkaufs-Pavillon")}
+          </h2>
+
+          <p className="max-w-lg font-sans text-base leading-7 text-graphit/70">
+            {tc("Der MINO Verkaufs-Pavillon ist die modulare Alternative zum Anhänger — schnell aufgebaut, in mehreren Größen planbar und ideal für Märkte, Events oder den wirtschaftlichen Einstieg in die mobile Gastronomie.")}
+          </p>
+
+          <ul className="grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+            {[
+              "Modulare Größen ab 3 × 3 M",
+              "Schneller Auf- und Abbau",
+              "Edelstahl-Arbeitsbereich und Verkaufstheke",
+              "Im Konfigurator individuell planbar",
+            ].map((highlight) => (
+              <li key={highlight} className="flex items-start gap-2.5 font-sans text-sm leading-6 text-graphit/75">
+                <Check className="mt-1 h-4 w-4 shrink-0 text-graphit/55" aria-hidden="true" />
+                {tc(highlight)}
+              </li>
+            ))}
+          </ul>
+
+          <dl className="flex w-full max-w-md gap-8 border-y border-graphit/10 py-4 font-sans text-sm">
+            <div className="flex flex-col gap-0.5">
+              <dt className="text-xs text-graphit/50">{tc("Größe")}</dt>
+              <dd className="font-bold text-graphit">ab 3 × 3 M</dd>
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <dt className="text-xs text-graphit/50">{tc("Bauweise")}</dt>
+              <dd className="font-bold text-graphit">{tc("modular")}</dd>
+            </div>
+            <div className="flex flex-col gap-0.5">
+              <dt className="text-xs text-graphit/50">{t("price")}</dt>
+              <dd className="font-bold text-graphit"><LocalizedPrice value="ab 7.900 €" /></dd>
+            </div>
+          </dl>
+
+          <div className="mt-1 flex flex-col gap-3 sm:flex-row">
+            <Button asChild>
+              <Link href="/konfigurator?typ=pavillon">{t("ctaConfigure")}</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/kaufen/pavillons">{tc("Pavillon ansehen")}</Link>
+            </Button>
+          </div>
+
+          <Link
+            href="/kontakt?anliegen=Beratung%20zu%20Verkaufs-Pavillon"
+            className="inline-flex items-center gap-1.5 font-sans text-sm font-medium text-graphit/60 transition-colors duration-200 hover:text-graphit"
+          >
+            {tc("Beratung anfragen")}
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+      </article>
+    </Reveal>
+  );
+}
+
 export function ModelsShowcase({ models }: { models: ModelData[] }) {
   return (
-    <div>
-      <div className="flex flex-col gap-28 lg:gap-40">
-        {models.map((m, index) => (
-          <ModelStage key={m.id} model={m} index={index} />
-        ))}
-      </div>
-
-      <ClosingGuidance />
+    <div className="flex flex-col gap-28 lg:gap-40">
+      {models.map((m, index) => (
+        <ModelStage key={m.id} model={m} index={index} />
+      ))}
+      <PavilionStage index={models.length} />
     </div>
   );
 }

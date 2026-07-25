@@ -11,7 +11,7 @@ export function ClosingCta() {
   const tc = (text: string) => translateCopy(text, region.languageCode);
 
   return (
-    <section className="relative isolate overflow-clip bg-graphit px-6 py-24 text-kreide lg:px-10 lg:py-32">
+    <section className="relative isolate overflow-clip bg-tinte px-6 py-24 text-kreide lg:px-10 lg:py-32">
       <div className="mx-auto flex max-w-3xl flex-col items-start gap-8">
         <Eyebrow onDark>{tc("Dein nächster Schritt")}</Eyebrow>
         <h2 className="text-4xl leading-[0.95] tracking-normal lg:text-6xl">

@@ -7,6 +7,9 @@
   --color-beton: #f2f1ee;
   --color-anthrazit: #3d3d35;
   --color-stahl: #6e6a5e;
+  /* Große dunkle Flächen wirken heller als Schrift im selben Ton — dieser Ton
+     lässt das CTA-Banner so tief wirken wie graphit-Text daneben. */
+  --color-tinte: #1a1b17;
 
   /* shadcn/ui-Tokens, auf die bestehende MINO-Palette gemappt */
   --color-background: var(--color-beton);
@@ -48,6 +51,7 @@ html.dark {
   --color-beton: #10110e;
   --color-anthrazit: #d6d0c4;
   --color-stahl: #a8a195;
+  --color-tinte: #f7f4ee;
   --color-background: var(--color-beton);
   --color-foreground: var(--color-graphit);
   --color-card: var(--color-kreide);
@@ -97,6 +101,21 @@ html.dark video {
   animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Laufbalken unter dem aktiven Modell-Tab — zeigt, wann automatisch gewechselt wird. */
+@keyframes carousel-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.animate-carousel-progress {
+  transform-origin: left center;
+  animation: carousel-progress 5.2s linear both;
+}
+
 /* Sichtbarer Tastatur-Fokus für Links (Buttons haben ihren Ring über ui/button) */
 a:focus-visible {
   outline: 2px solid var(--color-graphit);
@@ -131,6 +150,11 @@ a:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up {
     animation: none;
+  }
+
+  .animate-carousel-progress {
+    animation: none;
+    transform: scaleX(1);
   }
 }
 

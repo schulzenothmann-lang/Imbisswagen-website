@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -46,7 +47,7 @@ const steps = [
     subheading: "Transparente Updates während der Umsetzung",
     description:
       "Du siehst, wo dein Anhänger gerade steht, welche Schritte abgeschlossen sind und was als Nächstes passiert.",
-    image: "/images/prozess/produktions-raster.png",
+    image: "/images/prozess/produktions-raster.avif",
     gallery: true,
     imageFit: "cover" as const,
     tone: "graphit" as const,
@@ -79,46 +80,38 @@ export function HowItWorks() {
   }
 
   useEffect(() => {
-    let frame = 0;
+    const visibility = new Map<number, number>();
+    const items = itemRefs.current.filter((item): item is HTMLElement => item !== null);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const index = Number((entry.target as HTMLElement).dataset.index);
+          visibility.set(index, entry.isIntersecting ? entry.intersectionRatio : 0);
+        });
 
-    function updateActiveItem() {
-      frame = 0;
-
-      setActiveIndex((current) => {
-        const viewportCenter = window.innerHeight * 0.5;
-        let nextIndex = current;
-        let shortestDistance = Number.POSITIVE_INFINITY;
-
-        itemRefs.current.forEach((item, index) => {
-          if (!item) return;
-
-          const rect = item.getBoundingClientRect();
-          const itemCenter = rect.top + rect.height * 0.5;
-          const distance = Math.abs(itemCenter - viewportCenter);
-
-          if (distance < shortestDistance) {
-            shortestDistance = distance;
+        let nextIndex = -1;
+        let greatestVisibility = 0;
+        visibility.forEach((ratio, index) => {
+          if (ratio > greatestVisibility) {
+            greatestVisibility = ratio;
             nextIndex = index;
           }
         });
 
-        return nextIndex;
-      });
-    }
+        if (nextIndex >= 0) {
+          setActiveIndex((current) => (current === nextIndex ? current : nextIndex));
+        }
+      },
+      {
+        rootMargin: "-30% 0px -30% 0px",
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+      },
+    );
 
-    function requestUpdate() {
-      if (frame) return;
-      frame = window.requestAnimationFrame(updateActiveItem);
-    }
-
-    updateActiveItem();
-    window.addEventListener("scroll", requestUpdate, { passive: true });
-    window.addEventListener("resize", requestUpdate);
+    items.forEach((item) => observer.observe(item));
 
     return () => {
-      if (frame) window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", requestUpdate);
-      window.removeEventListener("resize", requestUpdate);
+      observer.disconnect();
     };
   }, []);
 
@@ -212,18 +205,24 @@ export function HowItWorks() {
                   </div>
                 </>
               ) : (
-                <img
-                  src={s.image}
-                  alt=""
-                  className={`h-full w-full ${s.imageFit === "contain" ? "object-contain" : "object-cover"}`}
-                />
+                <div className="relative h-full w-full">
+                  <Image
+                    src={s.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 1023px) calc(100vw - 3rem), 504px"
+                    loading="lazy"
+                    className={s.imageFit === "contain" ? "object-contain" : "object-cover"}
+                  />
+                </div>
               )}
             </div>
           );
 
           return (
-            <li key={s.station} data-index={index} className="relative lg:snap-center">
+            <li key={s.station} className="relative lg:snap-center">
               <article
+                data-index={index}
                 ref={(node) => {
                   itemRefs.current[index] = node;
                 }}

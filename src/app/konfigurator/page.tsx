@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 
-import { ConfiguratorPageIntro, ConfiguratorTypePicker } from "@/components/konfigurator/ConfiguratorPageCopy";
+import { ConfiguratorPageIntro } from "@/components/konfigurator/ConfiguratorPageCopy";
 import { ConfiguratorWizard } from "@/components/konfigurator/ConfiguratorWizard";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { ProductTypePicker } from "@/components/ProductTypePicker";
 
 export const metadata: Metadata = {
   title: "Konfigurator | MINO",
@@ -31,19 +32,23 @@ export default async function KonfiguratorPage({
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-beton pt-20 text-graphit lg:pt-[4.25rem]">
-        <section className="mx-auto w-full max-w-7xl px-6 pt-16 pb-8 lg:px-10 lg:pt-24">
-          <ConfiguratorPageIntro initialType={initialType} />
-        </section>
+      {initialType ? (
+        <main className="min-h-screen bg-beton pt-20 text-graphit lg:pt-[4.25rem]">
+          <section className="mx-auto w-full max-w-7xl px-6 pt-16 pb-8 lg:px-10 lg:pt-24">
+            <ConfiguratorPageIntro initialType={initialType} />
+          </section>
 
-        <section className="mx-auto w-full max-w-7xl px-6 pb-24 lg:px-10 lg:pb-32">
-          {initialType ? (
+          <section className="mx-auto w-full max-w-7xl px-6 pb-24 lg:px-10 lg:pb-32">
             <ConfiguratorWizard initialType={initialType} initialModelId={rawModel} initialStep={initialStep} />
-          ) : (
-            <ConfiguratorTypePicker />
-          )}
-        </section>
-      </main>
+          </section>
+        </main>
+      ) : (
+        <main className="flex min-h-svh flex-col bg-beton pt-20 text-graphit lg:h-svh lg:pt-[4.25rem]">
+          <section className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-6 pt-8 pb-6 lg:min-h-0 lg:px-10 lg:pt-10 lg:pb-8">
+            <ProductTypePicker variant="configure" />
+          </section>
+        </main>
+      )}
       <Footer />
     </>
   );

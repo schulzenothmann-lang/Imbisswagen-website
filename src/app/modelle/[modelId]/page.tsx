@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronLeft, Check, Minimize2, Star, Truck, Utensils } from "lucide-react";
+import { ChevronLeft, Check, Minimize2, Truck, Utensils } from "lucide-react";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
@@ -15,7 +15,6 @@ const modelIcons: Record<string, ReactNode> = {
   xl: <Minimize2 className="h-5 w-5" />,
   basis: <Utensils className="h-5 w-5" />,
   standard: <Truck className="h-5 w-5" />,
-  premium: <Star className="h-5 w-5" />,
 };
 
 export function generateStaticParams() {

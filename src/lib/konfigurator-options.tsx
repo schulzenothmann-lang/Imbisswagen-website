@@ -256,7 +256,7 @@ export const PROJECT_DETAILS: OptionCategory[] = [
     options: [
       { id: "keine", label: "Kein Logo", icon: <Tag className="h-5 w-5 opacity-30" />, neutral: true },
       { id: "standard", label: "Standard", icon: <Tag className="h-5 w-5" /> },
-      { id: "premium", label: "Premium (beleuchtet)", icon: <Sticker className="h-5 w-5" /> },
+      { id: "beleuchtet", label: "Beleuchtetes Logo", icon: <Sticker className="h-5 w-5" /> },
     ],
   },
   {

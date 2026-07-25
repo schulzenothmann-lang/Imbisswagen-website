@@ -629,7 +629,7 @@ function MobileJourneyMap({
   const tc = (text: string) => translateCopy(text, region.languageCode);
 
   return (
-    <div className="relative mx-auto aspect-[720/980] w-full max-w-sm overflow-hidden rounded-sm border border-graphit/10 bg-kreide/25">
+    <div className="relative mx-auto aspect-[720/980] w-full max-w-sm">
       <svg
         aria-hidden
         viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}

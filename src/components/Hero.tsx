@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -15,12 +16,19 @@ export function Hero() {
   const heroBlurred = ctaActive || headerActive || scrolled;
 
   useEffect(() => {
-    function updateScrolled() {
-      const hero = heroRef.current;
-      if (!hero) return;
+    if (!window.matchMedia("(min-width: 640px)").matches) return;
 
-      const rect = hero.getBoundingClientRect();
-      setScrolled(rect.top < -80);
+    let frame = 0;
+
+    function updateScrolled() {
+      frame = 0;
+      const nextScrolled = window.scrollY > 80;
+      setScrolled((current) => (current === nextScrolled ? current : nextScrolled));
+    }
+
+    function requestScrollUpdate() {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateScrolled);
     }
 
     function onPointerOver(event: PointerEvent) {
@@ -51,16 +59,15 @@ export function Hero() {
     }
 
     updateScrolled();
-    window.addEventListener("scroll", updateScrolled, { passive: true });
-    window.addEventListener("resize", updateScrolled);
+    window.addEventListener("scroll", requestScrollUpdate, { passive: true });
     document.addEventListener("pointerover", onPointerOver);
     document.addEventListener("pointerout", onPointerOut);
     document.addEventListener("focusin", onFocusIn);
     document.addEventListener("focusout", onFocusOut);
 
     return () => {
-      window.removeEventListener("scroll", updateScrolled);
-      window.removeEventListener("resize", updateScrolled);
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", requestScrollUpdate);
       document.removeEventListener("pointerover", onPointerOver);
       document.removeEventListener("pointerout", onPointerOut);
       document.removeEventListener("focusin", onFocusIn);
@@ -73,16 +80,26 @@ export function Hero() {
       ref={heroRef}
       className="on-media group relative isolate flex h-svh w-full items-center justify-center overflow-clip bg-graphit"
     >
+      <Image
+        src="/images/hero-poster.jpg"
+        alt=""
+        fill
+        preload
+        sizes="100vw"
+        className="absolute inset-0 -z-30 scale-[1.08] object-cover"
+      />
       <video
-        src="/videos/hero.mp4"
         autoPlay
         muted
         playsInline
+        preload="metadata"
         disablePictureInPicture
-        className={`absolute inset-0 -z-20 h-full w-full scale-[1.08] object-cover transition-[filter,transform] duration-1000 ease-out ${
+        className={`absolute inset-0 -z-20 hidden h-full w-full scale-[1.08] object-cover transition-[filter,transform] duration-1000 ease-out sm:block ${
           heroBlurred ? "scale-[1.1] blur-[3px]" : "blur-0"
         }`}
-      />
+      >
+        <source src="/videos/hero.mp4" type="video/mp4" media="(min-width: 640px)" />
+      </video>
       <div className="absolute inset-0 -z-10 bg-graphit/50 mix-blend-multiply" />
       <div
         className={`absolute inset-0 -z-10 bg-gradient-to-b from-graphit/75 via-graphit/35 to-graphit/85 transition-opacity duration-1000 ${
@@ -91,12 +108,12 @@ export function Hero() {
       />
 
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-6 pt-16 text-center lg:gap-8 lg:pt-8">
-        <Eyebrow onDark className="animate-fade-up" style={{ animationDelay: "1500ms" }}>
+        <Eyebrow onDark className="animate-fade-up" style={{ animationDelay: "200ms" }}>
           {t("heroKicker")}
         </Eyebrow>
         <h1
           className="animate-fade-up text-6xl leading-[0.95] tracking-normal text-kreide lg:text-8xl"
-          style={{ animationDelay: "1580ms" }}
+          style={{ animationDelay: "280ms" }}
         >
           <span className="font-serif font-medium">{t("heroTitleSerif")}</span>
           <br />
@@ -104,13 +121,13 @@ export function Hero() {
         </h1>
         <p
           className="animate-fade-up max-w-lg font-sans text-lg leading-8 text-kreide/80"
-          style={{ animationDelay: "1660ms" }}
+          style={{ animationDelay: "360ms" }}
         >
           {t("heroText")}
         </p>
         <div
           className="animate-fade-up flex flex-col gap-3 sm:flex-row"
-          style={{ animationDelay: "1740ms" }}
+          style={{ animationDelay: "440ms" }}
           onPointerEnter={() => setCtaActive(true)}
           onPointerLeave={() => setCtaActive(false)}
           onFocus={() => setCtaActive(true)}

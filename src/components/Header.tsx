@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { BadgeEuro, CalendarRange, Menu, Minimize2, Star, Store, Truck, Utensils } from "lucide-react";
+import { StorefrontIcon } from "@phosphor-icons/react/dist/csr/Storefront";
+import { Menu } from "lucide-react";
 
 import {
   Accordion,
@@ -27,72 +28,85 @@ import { RegionSwitcher } from "./RegionSwitcher";
 import { ThemeToggle } from "./ThemeToggle";
 import { translateCopy } from "@/lib/localized-content";
 
+type TrailerGlyphSize = "small" | "medium" | "large";
+
+const trailerBodyClasses: Record<TrailerGlyphSize, string> = {
+  small: "h-[10px] w-[13px]",
+  medium: "h-[11px] w-[16px]",
+  large: "h-[12px] w-[19px]",
+};
+
+function TrailerGlyph({ size }: { size: TrailerGlyphSize }) {
+  const hasTwoWheels = size !== "small";
+
+  return (
+    <span aria-hidden className="relative block h-5 w-6 shrink-0">
+      <span
+        className={`absolute bottom-[5px] left-0 rounded-[1px] border-[1.5px] border-current ${trailerBodyClasses[size]}`}
+      >
+        <span className="absolute -right-[5px] bottom-[1px] h-[1.5px] w-[5px] bg-current" />
+        <span
+          className={`absolute -bottom-[4px] size-1 rounded-full bg-current ${
+            hasTwoWheels ? "left-[3px]" : "left-1/2 -translate-x-1/2"
+          }`}
+        />
+        {hasTwoWheels && <span className="absolute right-[3px] -bottom-[4px] size-1 rounded-full bg-current" />}
+      </span>
+    </span>
+  );
+}
+
 const models = [
   {
     id: "xl",
-    name: "X-ray",
+    name: "Base",
     specs: "1,5 M · 500 KG",
     price: "12900",
-    description: "Der Kleinste — kompakt, leicht und schnell einsatzbereit.",
-    icon: <Minimize2 className="size-5 shrink-0" />,
+    icon: <TrailerGlyph size="small" />,
   },
   {
     id: "basis",
-    name: "Basis",
+    name: "Classic",
     specs: "5 M · 1,5 T",
     price: "ab 21.900 €",
-    description: "Der Einstieg — solide Fläche für den ersten Auftritt.",
-    icon: <Utensils className="size-5 shrink-0" />,
+    icon: <TrailerGlyph size="medium" />,
   },
   {
     id: "standard",
-    name: "Standard",
-    specs: "5,5 M · 1,7 T",
-    price: "ab 25.900 €",
-    description: "Der Bestseller — mehr Platz für Theke und Technik.",
-    icon: <Truck className="size-5 shrink-0" />,
-  },
-  {
-    id: "premium",
     name: "Premium",
     specs: "5,5 M · 1,7 T",
     price: "ab 25.900 €",
-    description: "Für hohe Ansprüche — mehr Ausstattung, mehr Auftritt.",
-    icon: <Star className="size-5 shrink-0" />,
+    icon: <TrailerGlyph size="large" />,
   },
 ];
 
 const purchaseLinks = [
   {
-    href: "/kaufen/imbiss-anhaenger",
+    href: "/angebote?angebot=kaufen&produkt=anhaenger",
     name: "Imbiss-Anhänger",
     eyebrow: "Sofort verfügbar",
-    description: "Fertige MINO Anhänger direkt anfragen und übernehmen.",
-    icon: <BadgeEuro className="size-5 shrink-0" />,
+    icon: <TrailerGlyph size="large" />,
   },
   {
-    href: "/kaufen/pavillons",
+    href: "/angebote?angebot=kaufen&produkt=pavillon",
     name: "Pavillons",
     eyebrow: "Günstiger starten",
-    description: "Verkaufs-Pavillons als kompakte Alternative zum Anhänger.",
-    icon: <Store className="size-5 shrink-0" />,
+    icon: <StorefrontIcon aria-hidden className="size-6 shrink-0" weight="regular" />,
   },
 ];
 
 const rentalLinks = [
   {
-    href: "/mieten/imbiss-anhaenger",
+    href: "/angebote?angebot=mieten&produkt=anhaenger",
     name: "Imbiss-Anhänger",
     eyebrow: "Flexibel starten",
-    description: "Mietbare Anhänger für Events, Saison oder Übergang.",
-    icon: <CalendarRange className="size-5 shrink-0" />,
+    icon: <TrailerGlyph size="large" />,
   },
   {
-    href: "/mieten/pavillons",
+    href: "/angebote?angebot=mieten&produkt=pavillon",
     name: "Pavillons",
     eyebrow: "Kurzfristig mieten",
-    description: "Verkaufs-Pavillons für Märkte, Events und Tests.",
-    icon: <Store className="size-5 shrink-0" />,
+    icon: <StorefrontIcon aria-hidden className="size-6 shrink-0" weight="regular" />,
   },
 ];
 
@@ -125,8 +139,10 @@ export function Header() {
 
   useEffect(() => {
     lastScrollY.current = window.scrollY;
+    let frame = 0;
 
-    function onScroll() {
+    function updateHeader() {
+      frame = 0;
       const currentY = window.scrollY;
       const delta = currentY - lastScrollY.current;
 
@@ -141,8 +157,16 @@ export function Header() {
       lastScrollY.current = currentY;
     }
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    function requestUpdate() {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateHeader);
+    }
+
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", requestUpdate);
+    };
   }, []);
 
   return (
@@ -172,25 +196,27 @@ export function Header() {
                   {t("navModels")}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="w-96 p-3">
+                  <ul className="w-[22rem] p-2">
                     <NavigationMenuLink asChild>
                       <div>
                         {models.map((m) => (
                           <li key={m.id}>
                             <Link
                               href={`/modelle/${m.id}`}
-                              className="flex select-none gap-4 rounded-sm p-3 leading-none no-underline outline-none transition-colors hover:bg-graphit/5"
+                              className="grid select-none grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 rounded-sm px-3 py-2.5 no-underline outline-none transition-colors hover:bg-graphit/5 focus:bg-graphit/5"
                             >
-                              <span className="text-graphit/70">{m.icon}</span>
-                              <div>
-                                <div className="flex items-baseline gap-2 font-sans text-sm font-semibold text-graphit">
-                                  {m.name}
-                                  <span className="font-sans text-xs font-normal text-graphit/60">
-                                    <LocalizedPrice value={m.price} />
-                                  </span>
-                                </div>
-                                <p className="mt-1 font-sans text-sm leading-snug text-graphit/60">{tc(m.description)}</p>
+                              <span className="flex size-8 items-center justify-center rounded-[2px] bg-graphit/5 text-graphit/65">
+                                {m.icon}
+                              </span>
+                              <div className="min-w-0">
+                                <p className="font-sans text-sm font-semibold text-graphit">{m.name}</p>
+                                <p className="mt-0.5 font-sans text-[0.7rem] tracking-[0.04em] text-graphit/45 uppercase">
+                                  {m.specs}
+                                </p>
                               </div>
+                              <span className="font-sans text-xs whitespace-nowrap text-graphit/55">
+                                <LocalizedPrice value={m.price} />
+                              </span>
                             </Link>
                           </li>
                         ))}
@@ -208,28 +234,23 @@ export function Header() {
                   {t("navAvailable")}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="w-80 p-3">
+                  <ul className="w-72 p-2">
                     <NavigationMenuLink asChild>
                       <div>
                         {purchaseLinks.map((item) => (
                           <li key={item.href}>
                             <Link
                               href={item.href}
-                              className="flex select-none gap-4 rounded-sm p-3 leading-none no-underline outline-none transition-colors hover:bg-graphit/5"
+                              className="grid select-none grid-cols-[2rem_minmax(0,1fr)] items-center gap-3 rounded-sm px-3 py-2.5 no-underline outline-none transition-colors hover:bg-graphit/5 focus:bg-graphit/5"
                             >
-                              <span className="text-graphit/70">{item.icon}</span>
-                              <div>
-                                <div className="flex items-baseline gap-2 font-sans text-sm font-semibold text-graphit">
-                                  {item.href.includes("pavillons") ? t("pavilion") : t("snackTrailer")}
-                                  <span className="font-sans text-xs font-normal text-graphit/60">
-                                    {item.href.includes("pavillons") ? t("cheaperStart") : t("navAvailable")}
-                                  </span>
-                                </div>
-                                <p className="mt-1 font-sans text-sm leading-snug text-graphit/60">
-                                  {item.href.includes("pavillons")
-                                    ? t("pavilionPurchaseDescription")
-                                    : t("trailerPurchaseDescription")}
+                              <span className="flex size-8 items-center justify-center rounded-[2px] bg-graphit/5 text-graphit/65">
+                                {item.icon}
+                              </span>
+                              <div className="min-w-0">
+                                <p className="font-sans text-sm font-semibold text-graphit">
+                                  {item.href.includes("pavillon") ? t("pavilion") : t("snackTrailer")}
                                 </p>
+                                <p className="mt-0.5 font-sans text-xs text-graphit/50">{tc(item.eyebrow)}</p>
                               </div>
                             </Link>
                           </li>
@@ -248,28 +269,23 @@ export function Header() {
                   {t("navRent")}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="w-80 p-3">
+                  <ul className="w-72 p-2">
                     <NavigationMenuLink asChild>
                       <div>
                         {rentalLinks.map((item) => (
                           <li key={item.href}>
                             <Link
                               href={item.href}
-                              className="flex select-none gap-4 rounded-sm p-3 leading-none no-underline outline-none transition-colors hover:bg-graphit/5"
+                              className="grid select-none grid-cols-[2rem_minmax(0,1fr)] items-center gap-3 rounded-sm px-3 py-2.5 no-underline outline-none transition-colors hover:bg-graphit/5 focus:bg-graphit/5"
                             >
-                              <span className="text-graphit/70">{item.icon}</span>
-                              <div>
-                                <div className="flex items-baseline gap-2 font-sans text-sm font-semibold text-graphit">
-                                  {item.href.includes("pavillons") ? t("pavilion") : t("snackTrailer")}
-                                  <span className="font-sans text-xs font-normal text-graphit/60">
-                                    {item.href.includes("pavillons") ? t("rentShortTerm") : t("flexibleStart")}
-                                  </span>
-                                </div>
-                                <p className="mt-1 font-sans text-sm leading-snug text-graphit/60">
-                                  {item.href.includes("pavillons")
-                                    ? t("pavilionRentalDescription")
-                                    : t("trailerRentalDescription")}
+                              <span className="flex size-8 items-center justify-center rounded-[2px] bg-graphit/5 text-graphit/65">
+                                {item.icon}
+                              </span>
+                              <div className="min-w-0">
+                                <p className="font-sans text-sm font-semibold text-graphit">
+                                  {item.href.includes("pavillon") ? t("pavilion") : t("snackTrailer")}
                                 </p>
+                                <p className="mt-0.5 font-sans text-xs text-graphit/50">{tc(item.eyebrow)}</p>
                               </div>
                             </Link>
                           </li>
@@ -355,18 +371,20 @@ export function Header() {
                         <SheetClose key={m.id} asChild>
                           <Link
                             href={`/modelle/${m.id}`}
-                            className="flex select-none gap-4 rounded-sm p-3 leading-none outline-none transition-colors hover:bg-graphit/5"
+                            className="grid select-none grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-3 rounded-sm px-3 py-2.5 outline-none transition-colors hover:bg-graphit/5"
                           >
-                            <span className="text-graphit/70">{m.icon}</span>
-                            <div>
-                              <div className="flex items-baseline gap-2 font-sans text-sm font-semibold text-graphit">
-                                {m.name}
-                                <span className="font-sans text-xs font-normal text-graphit/60">
-                                  <LocalizedPrice value={m.price} />
-                                </span>
-                              </div>
-                              <p className="text-sm leading-snug text-graphit/60">{m.specs}</p>
+                            <span className="flex size-8 items-center justify-center rounded-[2px] bg-graphit/5 text-graphit/65">
+                              {m.icon}
+                            </span>
+                            <div className="min-w-0">
+                              <p className="font-sans text-sm font-semibold text-graphit">{m.name}</p>
+                              <p className="mt-0.5 font-sans text-[0.7rem] tracking-[0.04em] text-graphit/45 uppercase">
+                                {m.specs}
+                              </p>
                             </div>
+                            <span className="font-sans text-xs whitespace-nowrap text-graphit/55">
+                              <LocalizedPrice value={m.price} />
+                            </span>
                           </Link>
                         </SheetClose>
                       ))}
@@ -405,21 +423,16 @@ export function Header() {
                         <SheetClose key={item.href} asChild>
                           <Link
                             href={item.href}
-                            className="flex select-none gap-4 rounded-sm p-3 leading-none outline-none transition-colors hover:bg-graphit/5"
+                            className="grid select-none grid-cols-[2rem_minmax(0,1fr)] items-center gap-3 rounded-sm px-3 py-2.5 outline-none transition-colors hover:bg-graphit/5"
                           >
-                            <span className="text-graphit/70">{item.icon}</span>
-                            <div>
-                              <div className="flex items-baseline gap-2 font-sans text-sm font-semibold text-graphit">
-                                {item.href.includes("pavillons") ? t("pavilion") : t("snackTrailer")}
-                                <span className="font-sans text-xs font-normal text-graphit/60">
-                                  {item.href.includes("pavillons") ? t("cheaperStart") : t("navAvailable")}
-                                </span>
-                              </div>
-                              <p className="text-sm leading-snug text-graphit/60">
-                                {item.href.includes("pavillons")
-                                  ? t("pavilionPurchaseDescription")
-                                  : t("trailerPurchaseDescription")}
+                            <span className="flex size-8 items-center justify-center rounded-[2px] bg-graphit/5 text-graphit/65">
+                              {item.icon}
+                            </span>
+                            <div className="min-w-0">
+                              <p className="font-sans text-sm font-semibold text-graphit">
+                                {item.href.includes("pavillon") ? t("pavilion") : t("snackTrailer")}
                               </p>
+                              <p className="mt-0.5 font-sans text-xs text-graphit/50">{tc(item.eyebrow)}</p>
                             </div>
                           </Link>
                         </SheetClose>
@@ -459,21 +472,16 @@ export function Header() {
                         <SheetClose key={item.href} asChild>
                           <Link
                             href={item.href}
-                            className="flex select-none gap-4 rounded-sm p-3 leading-none outline-none transition-colors hover:bg-graphit/5"
+                            className="grid select-none grid-cols-[2rem_minmax(0,1fr)] items-center gap-3 rounded-sm px-3 py-2.5 outline-none transition-colors hover:bg-graphit/5"
                           >
-                            <span className="text-graphit/70">{item.icon}</span>
-                            <div>
-                              <div className="flex items-baseline gap-2 font-sans text-sm font-semibold text-graphit">
-                                {item.href.includes("pavillons") ? t("pavilion") : t("snackTrailer")}
-                                <span className="font-sans text-xs font-normal text-graphit/60">
-                                  {item.href.includes("pavillons") ? t("rentShortTerm") : t("flexibleStart")}
-                                </span>
-                              </div>
-                              <p className="text-sm leading-snug text-graphit/60">
-                                {item.href.includes("pavillons")
-                                  ? t("pavilionRentalDescription")
-                                  : t("trailerRentalDescription")}
+                            <span className="flex size-8 items-center justify-center rounded-[2px] bg-graphit/5 text-graphit/65">
+                              {item.icon}
+                            </span>
+                            <div className="min-w-0">
+                              <p className="font-sans text-sm font-semibold text-graphit">
+                                {item.href.includes("pavillon") ? t("pavilion") : t("snackTrailer")}
                               </p>
+                              <p className="mt-0.5 font-sans text-xs text-graphit/50">{tc(item.eyebrow)}</p>
                             </div>
                           </Link>
                         </SheetClose>

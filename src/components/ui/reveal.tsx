@@ -26,11 +26,6 @@ export function Reveal({
     const node = ref.current;
     if (!node) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true);
-      return;
-    }
-
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -55,7 +50,7 @@ export function Reveal({
       ref={ref}
       style={delayMs ? { transitionDelay: `${delayMs}ms` } : undefined}
       className={cn(
-        "transition-[opacity,transform] duration-700 ease-brand",
+        "transition-[opacity,transform] duration-700 ease-brand motion-reduce:transform-none motion-reduce:opacity-100 motion-reduce:transition-none",
         visible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0",
         className
       )}

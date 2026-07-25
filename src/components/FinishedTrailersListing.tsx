@@ -11,35 +11,26 @@ import { translateCopy } from "@/lib/localized-content";
 import { formatPriceForRegion } from "@/lib/locale";
 import { LocalizedPrice } from "./LocalizedPrice";
 import { useLocaleSettings } from "./LocaleProvider";
+import type {
+  FilterGroup,
+  FilterGroupId,
+  FinishedTrailerProduct,
+  ListingProductType,
+  OfferData,
+  OfferKey,
+} from "@/lib/listings";
 
-type FilterGroup = {
-  title: string;
+type ProductType = ListingProductType;
+
+type ResolvedFilterGroup = Omit<FilterGroup, "options" | "optionsByProductType"> & {
   options: string[];
 };
 
-type ProductType = "anhaenger" | "pavillon";
-
-export type FinishedTrailerProduct = {
-  id: string;
-  productType: ProductType;
-  productLabel: string;
-  name: string;
-  status: string;
-  price: string;
-  length: string;
-  weight: string;
-  image: string;
-  imageAlt: string;
-  href: string;
-  description: string;
-};
+type SelectedFacets = Partial<Record<FilterGroupId, string[]>>;
 
 type FinishedTrailersListingProps = {
-  heading: string;
-  intro: string;
-  sortLabel: string;
-  filterGroups: FilterGroup[];
-  products: FinishedTrailerProduct[];
+  offers: Record<OfferKey, OfferData>;
+  initialOffer: OfferKey;
   initialProductTypes: ProductType[];
   countNoun: string;
 };
@@ -70,17 +61,17 @@ function singleMeters(text: string): number | null {
   return match ? parseFloat(match[0]) : null;
 }
 
-function optionMatchesProduct(groupTitle: string, option: string, product: FinishedTrailerProduct): boolean {
-  if (groupTitle.startsWith("Verfügbarkeit")) {
+function optionMatchesProduct(groupId: FilterGroupId, option: string, product: FinishedTrailerProduct): boolean {
+  if (groupId === "availability") {
     return product.status === option;
   }
 
-  if (groupTitle.startsWith("Modell")) {
+  if (groupId === "model") {
     if (option === "Verkaufs-Pavillon") return product.productType === "pavillon";
     return product.productType === "anhaenger" && product.name === option;
   }
 
-  if (groupTitle.startsWith("Länge")) {
+  if (groupId === "dimensions") {
     if (product.length === option) return true;
     const productMeters = singleMeters(product.length);
     const optionMeters = singleMeters(option);
@@ -89,7 +80,7 @@ function optionMatchesProduct(groupTitle: string, option: string, product: Finis
     return productMeters === optionMeters;
   }
 
-  if (groupTitle.startsWith("Gewicht")) {
+  if (groupId === "weight") {
     if (product.weight === option) return true;
     const productKg = weightKg(product.weight);
     const optionKg = weightKg(option);
@@ -98,7 +89,7 @@ function optionMatchesProduct(groupTitle: string, option: string, product: Finis
     return productKg === optionKg;
   }
 
-  if (groupTitle.toLowerCase().includes("preis")) {
+  if (groupId === "price") {
     const productPrice = firstEuroNumber(product.price);
     if (productPrice === null) return false;
     const bounds = option.match(/\d{1,3}(?:\.\d{3})*/g)?.map((n) => parseFloat(n.replaceAll(".", ""))) ?? [];
@@ -110,6 +101,58 @@ function optionMatchesProduct(groupTitle: string, option: string, product: Finis
   }
 
   return false;
+}
+
+function resolveFilterGroups(
+  filterGroups: FilterGroup[],
+  selectedProductTypes: ProductType[]
+): ResolvedFilterGroup[] {
+  return filterGroups.flatMap((group) => {
+    const productSpecificOptions = selectedProductTypes.flatMap(
+      (type) => group.optionsByProductType?.[type] ?? []
+    );
+    const options = [...new Set([...(group.options ?? []), ...productSpecificOptions])];
+
+    if (options.length === 0) return [];
+
+    const title =
+      selectedProductTypes.length === 1
+        ? (group.titleByProductType?.[selectedProductTypes[0]] ?? group.title)
+        : group.title;
+
+    return [{ ...group, title, options }];
+  });
+}
+
+function pruneSelectedFacets(
+  selectedFacets: SelectedFacets,
+  filterGroups: ResolvedFilterGroup[]
+): SelectedFacets {
+  const allowedOptions = new Map(filterGroups.map((group) => [group.id, new Set(group.options)]));
+  const next: SelectedFacets = {};
+
+  for (const [groupId, options] of Object.entries(selectedFacets) as [FilterGroupId, string[]][]) {
+    const allowed = allowedOptions.get(groupId);
+    if (!allowed) continue;
+    const validOptions = options.filter((option) => allowed.has(option));
+    if (validOptions.length > 0) next[groupId] = validOptions;
+  }
+
+  return next;
+}
+
+function matchesFacetSelection(
+  product: FinishedTrailerProduct,
+  filterGroups: ResolvedFilterGroup[],
+  selectedFacets: SelectedFacets,
+  excludedGroup: FilterGroupId | null
+): boolean {
+  return filterGroups.every((group) => {
+    if (group.id === excludedGroup) return true;
+    const active = selectedFacets[group.id] ?? [];
+    if (active.length === 0) return true;
+    return active.some((option) => optionMatchesProduct(group.id, option, product));
+  });
 }
 
 const STATUS_RANK: Record<string, number> = {
@@ -129,15 +172,13 @@ function FilterPanel({
   toggleProductType,
   selectedFacets,
   toggleFacet,
-  matchesAllExceptGroup,
 }: {
-  filterGroups: FilterGroup[];
+  filterGroups: ResolvedFilterGroup[];
   products: FinishedTrailerProduct[];
   selectedProductTypes: ProductType[];
   toggleProductType: (type: ProductType) => void;
-  selectedFacets: Record<string, string[]>;
-  toggleFacet: (group: string, option: string) => void;
-  matchesAllExceptGroup: (product: FinishedTrailerProduct, excludedGroup: string | null) => boolean;
+  selectedFacets: SelectedFacets;
+  toggleFacet: (group: FilterGroupId, option: string) => void;
 }) {
   const { region, rates, t } = useLocaleSettings();
   const tc = (text: string) => translateCopy(text, region.languageCode);
@@ -153,13 +194,18 @@ function FilterPanel({
           ].map((option) => (
             <label
               key={option.id}
-              className="flex cursor-pointer items-center gap-3 font-sans text-sm text-graphit/68"
+              className={`flex items-center gap-3 font-sans text-sm text-graphit/68 ${
+                selectedProductTypes.length === 1 && selectedProductTypes.includes(option.id)
+                  ? "cursor-not-allowed"
+                  : "cursor-pointer"
+              }`}
             >
               <input
                 type="checkbox"
                 checked={selectedProductTypes.includes(option.id)}
+                disabled={selectedProductTypes.length === 1 && selectedProductTypes.includes(option.id)}
                 onChange={() => toggleProductType(option.id)}
-                className="h-4 w-4 accent-graphit"
+                className="h-4 w-4 accent-graphit disabled:opacity-60"
               />
               {option.label}
             </label>
@@ -168,18 +214,19 @@ function FilterPanel({
       </div>
 
       {filterGroups.map((group) => (
-        <div key={group.title} className="pt-5 pb-5">
+        <div key={group.id} className="pt-5 pb-5">
           <h3 className="font-sans text-base font-black tracking-tight text-graphit">{tc(group.title)}</h3>
           <div className="mt-4 flex flex-col gap-2.5">
             {group.options.map((option) => {
-              const checked = selectedFacets[group.title]?.includes(option) ?? false;
+              const checked = selectedFacets[group.id]?.includes(option) ?? false;
               const count = products.filter(
                 (product) =>
                   selectedProductTypes.includes(product.productType) &&
-                  matchesAllExceptGroup(product, group.title) &&
-                  optionMatchesProduct(group.title, option, product)
+                  matchesFacetSelection(product, filterGroups, selectedFacets, group.id) &&
+                  optionMatchesProduct(group.id, option, product)
               ).length;
               const disabled = count === 0 && !checked;
+              const translatedOption = tc(option);
 
               return (
                 <label
@@ -192,10 +239,14 @@ function FilterPanel({
                     type="checkbox"
                     checked={checked}
                     disabled={disabled}
-                    onChange={() => toggleFacet(group.title, option)}
+                    onChange={() => toggleFacet(group.id, option)}
                     className="h-4 w-4 accent-graphit disabled:opacity-40"
                   />
-                  <span className="flex-1">{formatPriceForRegion(tc(option), region, rates)}</span>
+                  <span className="flex-1">
+                    {group.id === "price"
+                      ? formatPriceForRegion(translatedOption, region, rates)
+                      : translatedOption}
+                  </span>
                   <span className="font-sans text-xs tabular-nums text-graphit/40">{count}</span>
                 </label>
               );
@@ -265,53 +316,73 @@ function ProductCard({ product }: { product: FinishedTrailerProduct }) {
 /* ---------- Hauptkomponente ---------- */
 
 export function FinishedTrailersListing({
-  heading,
-  intro,
-  filterGroups,
-  products,
+  offers,
+  initialOffer,
   initialProductTypes,
   countNoun,
 }: FinishedTrailersListingProps) {
   const { region, t } = useLocaleSettings();
   const tc = (text: string) => translateCopy(text, region.languageCode);
+  const [offer, setOffer] = useState<OfferKey>(initialOffer);
   const [selectedProductTypes, setSelectedProductTypes] = useState<ProductType[]>(initialProductTypes);
-  const [selectedFacets, setSelectedFacets] = useState<Record<string, string[]>>({});
+  const [selectedFacets, setSelectedFacets] = useState<SelectedFacets>({});
   const [sortKey, setSortKey] = useState<SortKey>("availability");
 
+  const { filterGroups, products } = offers[offer];
+  const resolvedFilterGroups = useMemo(
+    () => resolveFilterGroups(filterGroups, selectedProductTypes),
+    [filterGroups, selectedProductTypes]
+  );
+
+  function selectOffer(next: OfferKey) {
+    if (next === offer) return;
+    // Preis-/Verfügbarkeits-Facetten unterscheiden sich je Angebot → zurücksetzen.
+    setSelectedFacets({});
+    setOffer(next);
+  }
+
   function toggleProductType(type: ProductType) {
-    setSelectedProductTypes((current) =>
-      current.includes(type) ? current.filter((item) => item !== type) : [...current, type]
+    const isSelected = selectedProductTypes.includes(type);
+    if (isSelected && selectedProductTypes.length === 1) return;
+
+    const nextProductTypes = isSelected
+      ? selectedProductTypes.filter((item) => item !== type)
+      : [...selectedProductTypes, type];
+
+    setSelectedProductTypes(nextProductTypes);
+    setSelectedFacets((current) =>
+      pruneSelectedFacets(current, resolveFilterGroups(filterGroups, nextProductTypes))
     );
   }
 
-  function toggleFacet(group: string, option: string) {
+  function toggleFacet(group: FilterGroupId, option: string) {
     setSelectedFacets((current) => {
       const active = current[group] ?? [];
       const next = active.includes(option) ? active.filter((item) => item !== option) : [...active, option];
+      if (next.length === 0) {
+        const remaining = { ...current };
+        delete remaining[group];
+        return remaining;
+      }
       return { ...current, [group]: next };
     });
   }
 
-  const activeFacetCount = Object.values(selectedFacets).reduce((sum, options) => sum + options.length, 0);
+  const activeFacetCount = Object.values(selectedFacets).reduce(
+    (sum, options) => sum + (options?.length ?? 0),
+    0
+  );
 
   function resetFilters() {
     setSelectedFacets({});
     setSelectedProductTypes(["anhaenger", "pavillon"]);
   }
 
-  /** Facetten-Logik: innerhalb einer Gruppe ODER, zwischen Gruppen UND. */
-  function matchesAllExceptGroup(product: FinishedTrailerProduct, excludedGroup: string | null): boolean {
-    return filterGroups.every((group) => {
-      if (group.title === excludedGroup) return true;
-      const active = selectedFacets[group.title] ?? [];
-      if (active.length === 0) return true;
-      return active.some((option) => optionMatchesProduct(group.title, option, product));
-    });
-  }
-
   const visibleProducts = useMemo(() => {
     const filtered = products.filter(
-      (product) => selectedProductTypes.includes(product.productType) && matchesAllExceptGroup(product, null)
+      (product) =>
+        selectedProductTypes.includes(product.productType) &&
+        matchesFacetSelection(product, resolvedFilterGroups, selectedFacets, null)
     );
 
     return [...filtered].sort((a, b) => {
@@ -322,28 +393,29 @@ export function FinishedTrailersListing({
       const priceB = firstEuroNumber(b.price) ?? 0;
       return sortKey === "priceAsc" ? priceA - priceB : priceB - priceA;
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [products, selectedProductTypes, selectedFacets, sortKey, filterGroups]);
+  }, [products, selectedProductTypes, selectedFacets, sortKey, resolvedFilterGroups]);
 
   const configureHref = useMemo(() => {
     if (selectedProductTypes.length !== 1) return "/konfigurator";
     return selectedProductTypes[0] === "anhaenger" ? "/konfigurator?typ=anhaenger" : "/konfigurator?typ=pavillon";
   }, [selectedProductTypes]);
 
-  const countLabel = t("found", {
-    count: visibleProducts.length,
-    noun: countNoun === "Produkte" ? t("products") : countNoun,
-  });
+  const countLabel =
+    visibleProducts.length === 1 && countNoun === "Produkte"
+      ? t("foundOne", { noun: t("product") })
+      : t("found", {
+          count: visibleProducts.length,
+          noun: countNoun === "Produkte" ? t("products") : countNoun,
+        });
 
   const filterPanel = (
     <FilterPanel
-      filterGroups={filterGroups}
+      filterGroups={resolvedFilterGroups}
       products={products}
       selectedProductTypes={selectedProductTypes}
       toggleProductType={toggleProductType}
       selectedFacets={selectedFacets}
       toggleFacet={toggleFacet}
-      matchesAllExceptGroup={matchesAllExceptGroup}
     />
   );
 
@@ -364,19 +436,7 @@ export function FinishedTrailersListing({
 
   return (
     <main className="min-h-screen bg-beton pt-20 text-graphit lg:pt-[4.25rem]">
-      <section className="mx-auto w-full max-w-7xl px-6 pt-10 pb-8 lg:px-10 lg:pt-14">
-        <div className="flex max-w-2xl flex-col gap-3">
-          <h1 className="text-3xl leading-tight tracking-normal lg:text-4xl">
-            <span className="font-serif font-medium">{t("choosePrefix")}</span>{" "}
-            <span className="font-sans font-black tracking-tight">{tc(heading)}</span>
-          </h1>
-          <p className="max-w-xl font-sans text-sm leading-6 text-graphit/60 lg:text-base lg:leading-7">
-            {tc(intro)}
-          </p>
-        </div>
-      </section>
-
-      <section className="w-full pb-20 lg:pb-28">
+      <section className="w-full pt-6 pb-20 lg:pt-8 lg:pb-28">
         <div className="grid gap-6 lg:grid-cols-[16.5rem_minmax(0,1fr)] lg:items-start lg:gap-8">
           {/* Mobile: Filter als Klappe */}
           <div className="px-6 lg:hidden">
@@ -415,9 +475,29 @@ export function FinishedTrailersListing({
           </aside>
 
           <section aria-label="Produktübersicht" className="min-w-0 px-6 lg:pr-10 lg:pl-0">
-            <div className="mb-5 flex items-center justify-between gap-4 border-b border-graphit/10 py-3">
+            <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-3 border-b border-graphit/10 py-3">
+              <div
+                role="group"
+                aria-label={t("offerToggleLabel")}
+                className="inline-flex rounded-sm border border-graphit/15 bg-kreide/50 p-0.5"
+              >
+                {(["kaufen", "mieten"] as OfferKey[]).map((key) => (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => selectOffer(key)}
+                    aria-pressed={offer === key}
+                    className={cn(
+                      "rounded-[0.2rem] px-4 py-1.5 font-sans text-sm font-semibold tracking-tight transition-colors",
+                      offer === key ? "bg-graphit text-kreide" : "text-graphit/55 hover:text-graphit"
+                    )}
+                  >
+                    {key === "kaufen" ? t("offerBuy") : t("offerRent")}
+                  </button>
+                ))}
+              </div>
               <p className="font-sans text-sm text-graphit/55">{countLabel}</p>
-              <label className="relative inline-flex items-center gap-2 font-sans text-sm text-graphit/70">
+              <label className="relative ml-auto inline-flex items-center gap-2 font-sans text-sm text-graphit/70">
                 <span className="hidden sm:inline">{t("sort")}:</span>
                 <span className="relative">
                   <select

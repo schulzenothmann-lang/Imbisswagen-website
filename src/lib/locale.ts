@@ -128,7 +128,7 @@ export function formatPriceForRegion(price: string, region: Region, liveRates?: 
   const formatAmount = (value: number) => formatter.format(value * getRateForRegion(region, liveRates));
 
   if (price.includes("€")) {
-    return price.replace(/(\d{1,3}(?:[.\s]\d{3})*|\d+)(?:,(\d{1,2}))?\s*€?/gu, (match, whole, decimals) => {
+    return price.replace(/(\d{1,3}(?:[.\s]\d{3})*|\d+)(?:,(\d{1,2}))?(?:\s*€)?/gu, (match, whole, decimals) => {
       const normalized = String(whole).replace(/[.\s]/g, "") + (decimals ? `.${decimals}` : "");
       const value = Number(normalized);
       return Number.isFinite(value) ? formatAmount(value) : match;
@@ -355,6 +355,12 @@ export const translations = {
     fr: "{count} {noun} trouvés",
     nl: "{count} {noun} gevonden",
   },
+  foundOne: {
+    de: "1 {noun} gefunden",
+    en: "1 {noun} found",
+    fr: "1 {noun} trouvé",
+    nl: "1 {noun} gevonden",
+  },
   products: {
     de: "Produkte",
     en: "products",
@@ -414,6 +420,36 @@ export const translations = {
     en: "Food trailers and sales pavilions to rent for markets, events and seasonal use.",
     fr: "Remorques snack et pavillons à louer pour marchés, événements et saisons.",
     nl: "Foodtrailers en verkooppaviljoens te huur voor markten, events en seizoenen.",
+  },
+  pickTypeHeading: {
+    de: "Anhänger oder Pavillon?",
+    en: "Trailer or pavilion?",
+    fr: "Remorque ou pavillon ?",
+    nl: "Trailer of paviljoen?",
+  },
+  configureEyebrow: {
+    de: "Konfigurieren",
+    en: "Configure",
+    fr: "Configurer",
+    nl: "Configureren",
+  },
+  offerBuy: {
+    de: "Kaufen",
+    en: "Buy",
+    fr: "Acheter",
+    nl: "Kopen",
+  },
+  offerRent: {
+    de: "Mieten",
+    en: "Rent",
+    fr: "Louer",
+    nl: "Huren",
+  },
+  offerToggleLabel: {
+    de: "Angebot",
+    en: "Offer",
+    fr: "Offre",
+    nl: "Aanbod",
   },
   planIndividually: {
     de: "Individuell planen",

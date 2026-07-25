@@ -12,10 +12,9 @@ import { useLocaleSettings } from "./LocaleProvider";
 type FacetOption = { id: string; label: string; available: boolean };
 
 const modelFacets: FacetOption[] = [
-  { id: "basis", label: "Basis", available: true },
-  { id: "standard", label: "Standard", available: false },
-  { id: "premium", label: "Premium", available: false },
-  { id: "xl", label: "X-ray", available: false },
+  { id: "xl", label: "Base", available: false },
+  { id: "basis", label: "Classic", available: true },
+  { id: "standard", label: "Premium", available: false },
 ];
 
 const availabilityFacets: FacetOption[] = [
@@ -35,13 +34,13 @@ const priceFacets: FacetOption[] = [
   { id: "ueber-35k", label: "über 35.000 €", available: false },
 ];
 
-// Weitere Anhänger (Standard, Premium, X-ray) folgen ab Werk, sobald sie als
-// sofort verfügbare Einheit vorrätig sind — bis dahin nur Basis gelistet.
+// Weitere Anhänger (Base und Premium) folgen ab Werk, sobald sie als
+// sofort verfügbare Einheit vorrätig sind — bis dahin nur Classic gelistet.
 const products = [
   {
     id: "basis",
     model: "basis",
-    name: "MINO Basis",
+    name: "MINO Classic",
     tagline: "Der Einstieg — solide Fläche für den ersten Auftritt.",
     length: "5 M",
     weight: "1,5 T",
@@ -88,12 +87,14 @@ function FilterOption({
   count,
   checked,
   disabled,
+  formatAsPrice,
   onChange,
 }: {
   label: string;
   count: number;
   checked: boolean;
   disabled?: boolean;
+  formatAsPrice?: boolean;
   onChange: () => void;
 }) {
   const { region, rates } = useLocaleSettings();
@@ -120,7 +121,9 @@ function FilterOption({
       >
         {checked && <Check className="h-3 w-3 text-kreide" />}
       </span>
-      <span className="flex-1">{formatPriceForRegion(tc(label), region, rates)}</span>
+      <span className="flex-1">
+        {formatAsPrice ? formatPriceForRegion(tc(label), region, rates) : tc(label)}
+      </span>
       <span className="font-sans text-xs text-graphit/40">{count}</span>
       {disabled && (
         <span className="rounded-full bg-graphit/5 px-1.5 py-0.5 font-sans text-[10px] tracking-wide text-graphit/40 uppercase">
@@ -176,6 +179,7 @@ function FilterPanel({
                 count={matchCount}
                 checked={selected[group.key].includes(option.id)}
                 disabled={!option.available}
+                formatAsPrice={group.key === "price"}
                 onChange={() => toggle(group.key, option.id)}
               />
             );
