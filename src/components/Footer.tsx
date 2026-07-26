@@ -15,7 +15,7 @@ const columns = [
     links: [
       { label: "Modelle", href: "/modelle" },
       { label: "Imbiss-Anhänger", href: "/kaufen/imbiss-anhaenger" },
-      { label: "Pavillons", href: "/kaufen/pavillons" },
+      { label: "Verkaufspavillons", href: "/kaufen/pavillons" },
       { label: "Jetzt konfigurieren", href: "/konfigurator" },
     ],
   },
@@ -23,7 +23,7 @@ const columns = [
     heading: "Mieten",
     links: [
       { label: "Imbiss-Anhänger", href: "/mieten/imbiss-anhaenger" },
-      { label: "Pavillons", href: "/mieten/pavillons" },
+      { label: "Verkaufspavillons", href: "/mieten/pavillons" },
     ],
   },
   {
@@ -127,7 +127,7 @@ export function Footer() {
                             ? t("navModels")
                             : l.label === "Imbiss-Anhänger"
                               ? t("snackTrailer")
-                              : l.label === "Pavillons"
+                              : l.label === "Verkaufspavillons"
                                 ? t("pavilion")
                                 : l.label === "Jetzt konfigurieren"
                                   ? t("ctaConfigure")

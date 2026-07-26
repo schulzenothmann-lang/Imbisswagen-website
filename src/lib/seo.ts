@@ -1,7 +1,7 @@
 export const SITE_NAME = "MINO Imbissanhänger";
 export const SITE_TITLE = "MINO Imbissanhänger | Kaufen, mieten & konfigurieren";
 export const SITE_DESCRIPTION =
-  "MINO baut, verkauft und vermietet Imbissanhänger und Verkaufs-Pavillons für Märkte, Events und Gastronomie in der DACH-Region, mit besonderem Fokus auf Norddeutschland und Bremen.";
+  "MINO baut, verkauft und vermietet Imbissanhänger und Verkaufspavillons für Märkte, Events und Gastronomie in der DACH-Region, mit besonderem Fokus auf Norddeutschland und Bremen.";
 
 export const OG_IMAGE = {
   path: "/images/hero-sms5000.png",

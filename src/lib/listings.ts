@@ -53,16 +53,16 @@ const kaufenProducts: FinishedTrailerProduct[] = [
   {
     id: "pavillon-kaufen",
     productType: "pavillon",
-    productLabel: "Pavillon",
-    name: "Verkaufs-Pavillon",
+    productLabel: "Verkaufspavillon",
+    name: "Station",
     status: "Sofort verfügbar",
     price: "ab 7.900 €",
     length: "3 x 3 M",
     weight: "modular",
     image: "/images/produkte/verkaufs-pavillon.png",
-    imageAlt: "MINO Verkaufs-Pavillon",
-    href: "/kontakt?anliegen=Beratung%20zu%20Verkaufs-Pavillon",
-    description: "Günstiger Verkaufs-Pavillon mit Theke und Edelstahl-Arbeitsbereich",
+    imageAlt: "MINO Verkaufspavillon",
+    href: "/kontakt?anliegen=Beratung%20zu%20Modell%20Station",
+    description: "Günstiger Verkaufspavillon mit Theke und Edelstahl-Arbeitsbereich",
   },
 ];
 
@@ -84,16 +84,16 @@ const mietenProducts: FinishedTrailerProduct[] = [
   {
     id: "pavillon-mieten",
     productType: "pavillon",
-    productLabel: "Pavillon",
-    name: "Verkaufs-Pavillon",
+    productLabel: "Verkaufspavillon",
+    name: "Station",
     status: "Mietbereit",
     price: "ab 390 € / Monat",
     length: "3 x 3 M",
     weight: "modular",
     image: "/images/produkte/verkaufs-pavillon.png",
-    imageAlt: "MINO Verkaufs-Pavillon zur Miete",
-    href: "/kontakt?anliegen=Beratung%20zu%20Verkaufs-Pavillon",
-    description: "Mietbarer Verkaufs-Pavillon für Märkte, Events und saisonale Einsätze",
+    imageAlt: "MINO Verkaufspavillon zur Miete",
+    href: "/kontakt?anliegen=Beratung%20zu%20Modell%20Station",
+    description: "Mietbarer Verkaufspavillon für Märkte, Events und saisonale Einsätze",
   },
 ];
 
@@ -105,8 +105,8 @@ const modelVariantGroup: FilterGroup = {
     pavillon: "Variante",
   },
   optionsByProductType: {
-    anhaenger: ["Base", "Classic", "Premium"],
-    pavillon: ["Verkaufs-Pavillon"],
+    anhaenger: ["Light", "Classic", "Premium"],
+    pavillon: ["Station"],
   },
 };
 
@@ -135,7 +135,7 @@ export const LISTING_OFFERS: Record<OfferKey, OfferData> = {
   kaufen: {
     heading: "was du kaufen möchtest.",
     intro:
-      "Wähle zwischen sofort verfügbaren Imbiss-Anhängern und Verkaufs-Pavillons. Über den Produktfilter kannst du beide Produktarten vergleichen.",
+      "Wähle zwischen sofort verfügbaren Imbiss-Anhängern und Verkaufspavillons. Über den Produktfilter kannst du beide Produktarten vergleichen.",
     filterGroups: [
       { id: "availability", title: "Verfügbarkeit", options: ["Sofort verfügbar", "In Fertigung", "Reservierbar"] },
       modelVariantGroup,
@@ -148,7 +148,7 @@ export const LISTING_OFFERS: Record<OfferKey, OfferData> = {
   mieten: {
     heading: "was du mieten möchtest.",
     intro:
-      "Wähle zwischen mietbaren Imbiss-Anhängern und Verkaufs-Pavillons. Über den Produktfilter kannst du beide Produktarten vergleichen.",
+      "Wähle zwischen mietbaren Imbiss-Anhängern und Verkaufspavillons. Über den Produktfilter kannst du beide Produktarten vergleichen.",
     filterGroups: [
       { id: "availability", title: "Verfügbarkeit", options: ["Mietbereit", "In Fertigung", "Reservierbar", "Auf Anfrage"] },
       modelVariantGroup,

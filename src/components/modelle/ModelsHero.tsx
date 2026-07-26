@@ -10,7 +10,7 @@ import { Eyebrow } from "@/components/ui/eyebrow";
 import { LocalizedPrice } from "@/components/LocalizedPrice";
 import { useLocaleSettings } from "@/components/LocaleProvider";
 import { translateCopy } from "@/lib/localized-content";
-import type { ModelData } from "@/lib/models";
+import { configureHrefFor, type ModelData } from "@/lib/models";
 
 const AUTOPLAY_MS = 5200;
 
@@ -21,6 +21,7 @@ type HeroSlide = {
   weight: string;
   price: string;
   image: string;
+  imageFit: "contain" | "cover";
   detailHref: string;
   configureHref: string;
 };
@@ -32,9 +33,10 @@ function createSlides(models: ModelData[]): HeroSlide[] {
     length: model.length,
     weight: model.weight,
     price: model.price,
-    image: `/images/modelle/${model.imageId}.png`,
+    image: model.image,
+    imageFit: model.imageFit,
     detailHref: `/modelle/${model.id}`,
-    configureHref: `/konfigurator?typ=anhaenger&modell=${model.id}&schritt=2`,
+    configureHref: configureHrefFor(model),
   }));
 }
 
@@ -115,7 +117,7 @@ export function ModelsHero({ models }: { models: ModelData[] }) {
             <span className="font-sans font-black tracking-tight">{tc("Modelle.")}</span>
           </h1>
           <p className="mt-3.5 font-sans text-sm leading-6 text-kreide/60 lg:text-base">
-            {tc("Drei Größen, eine Handschrift.")}
+            {tc("Vier Modelle, eine Handschrift.")}
           </p>
         </div>
 
@@ -191,14 +193,30 @@ export function ModelsHero({ models }: { models: ModelData[] }) {
                     aria-label={`${slide.name} ${tc("Modell im Detail ansehen")}`}
                     className="group block h-full w-full"
                   >
-                    <Image
-                      src={slide.image}
-                      alt={`MINO ${slide.name}`}
-                      fill
-                      priority={index === 0}
-                      sizes="(max-width: 1023px) 92vw, 86rem"
-                      className="object-contain object-bottom transition-transform duration-700 ease-brand group-hover:scale-[1.015]"
-                    />
+                    {/* Freigestellte Anhänger stehen frei auf der Bühne; das Studiofoto
+                        der Station bekommt einen gerahmten Ausschnitt in der Mitte. */}
+                    {slide.imageFit === "cover" ? (
+                      <div className="relative mx-auto h-full w-fit max-w-full overflow-hidden rounded-sm ring-1 ring-kreide/10">
+                        <Image
+                          src={slide.image}
+                          alt={`MINO ${slide.name}`}
+                          width={1536}
+                          height={1024}
+                          priority={index === 0}
+                          sizes="(max-width: 1023px) 92vw, 48rem"
+                          className="h-full w-auto object-cover transition-transform duration-700 ease-brand group-hover:scale-[1.015]"
+                        />
+                      </div>
+                    ) : (
+                      <Image
+                        src={slide.image}
+                        alt={`MINO ${slide.name}`}
+                        fill
+                        priority={index === 0}
+                        sizes="(max-width: 1023px) 92vw, 86rem"
+                        className="object-contain object-bottom transition-transform duration-700 ease-brand group-hover:scale-[1.015]"
+                      />
+                    )}
                   </Link>
                 </div>
               );
@@ -242,13 +260,13 @@ export function ModelsHero({ models }: { models: ModelData[] }) {
         </div>
       </div>
 
-      {/* Übergang zur hellen Seite — und der leise Hinweis auf die Pavillon-Alternative. */}
+      {/* Übergang zur hellen Seite — und der leise Hinweis auf die Station als Alternative. */}
       <div className="border-t border-kreide/10">
         <Link
-          href="#pavillon"
+          href="#station"
           className="mx-auto flex w-full max-w-[86rem] items-center justify-center gap-2 px-6 py-3.5 font-sans text-[0.7rem] font-bold tracking-[0.16em] text-kreide/45 uppercase transition-colors duration-200 hover:text-kreide lg:px-12"
         >
-          {tc("Auch als Verkaufs-Pavillon")}
+          {tc("Auch als Verkaufspavillon")}
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
         </Link>
       </div>

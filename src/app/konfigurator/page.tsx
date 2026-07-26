@@ -5,10 +5,11 @@ import { ConfiguratorWizard } from "@/components/konfigurator/ConfiguratorWizard
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { ProductTypePicker } from "@/components/ProductTypePicker";
+import { LEGACY_MODEL_IDS } from "@/lib/models";
 
 export const metadata: Metadata = {
   title: "Konfigurator | MINO",
-  description: "Stelle deinen MINO Anhänger oder Verkaufs-Pavillon Schritt für Schritt selbst zusammen und fordere ein Angebot an.",
+  description: "Stelle deinen MINO Anhänger oder Verkaufspavillon Schritt für Schritt selbst zusammen und fordere ein Angebot an.",
 };
 
 export default async function KonfiguratorPage({
@@ -24,7 +25,9 @@ export default async function KonfiguratorPage({
 }) {
   const params = await searchParams;
   const rawType = typeof params?.typ === "string" ? params.typ : undefined;
-  const rawModel = typeof params?.modell === "string" ? params.modell : typeof params?.model === "string" ? params.model : undefined;
+  const rawModelParam = typeof params?.modell === "string" ? params.modell : typeof params?.model === "string" ? params.model : undefined;
+  // Alte Links (modell=basis) sollen weiterhin das richtige Modell vorbelegen.
+  const rawModel = rawModelParam ? (LEGACY_MODEL_IDS[rawModelParam] ?? rawModelParam) : undefined;
   const rawStep = typeof params?.schritt === "string" ? params.schritt : typeof params?.step === "string" ? params.step : undefined;
   const initialType = rawType === "pavillon" || rawType === "anhaenger" ? rawType : undefined;
   const initialStep = rawStep ? Number.parseInt(rawStep, 10) : undefined;

@@ -6,9 +6,9 @@ import { Header } from "@/components/Header";
 import { LISTING_OFFERS, type ListingProductType, type OfferKey } from "@/lib/listings";
 
 export const metadata: Metadata = {
-  title: "Anhänger & Pavillons – kaufen oder mieten | MINO",
+  title: "Anhänger & Verkaufspavillons – kaufen oder mieten | MINO",
   description:
-    "Alle sofort verfügbaren und mietbaren MINO Imbiss-Anhänger und Verkaufs-Pavillons in einer Übersicht – umschalten zwischen Kaufen und Mieten, filtern und vergleichen.",
+    "Alle sofort verfügbaren und mietbaren MINO Imbiss-Anhänger und Verkaufspavillons in einer Übersicht – umschalten zwischen Kaufen und Mieten, filtern und vergleichen.",
 };
 
 export default async function AngebotePage({

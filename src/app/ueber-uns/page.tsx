@@ -43,7 +43,7 @@ const PROMISES = [
   },
   {
     heading: "Wir raten auch ab",
-    text: "Wenn ein kleineres Modell oder ein Pavillon für dein Vorhaben reicht, sagen wir das — auch wenn wir daran weniger verdienen.",
+    text: "Wenn ein kleineres Modell oder ein Verkaufspavillon für dein Vorhaben reicht, sagen wir das — auch wenn wir daran weniger verdienen.",
   },
   {
     heading: "Preise sind vorher sichtbar",
@@ -307,7 +307,7 @@ export default function UeberUnsPage() {
               </h2>
               <div className="mt-6 flex flex-col gap-5 font-sans text-base leading-7 text-graphit/70 lg:text-[1.0625rem] lg:leading-8">
                 <p>
-                  <LocalizedCopy text="Manche wollen mit einem fertigen Anhänger direkt loslegen. Andere brauchen erst ein kleineres Setup, etwa einen Verkaufs-Pavillon, um ein Konzept zu testen. Für beides möchten wir eine klare, faire und verständliche Lösung anbieten." />
+                  <LocalizedCopy text="Manche wollen mit einem fertigen Anhänger direkt loslegen. Andere brauchen erst ein kleineres Setup, etwa einen Verkaufspavillon, um ein Konzept zu testen. Für beides möchten wir eine klare, faire und verständliche Lösung anbieten." />
                 </p>
                 <p>
                   <LocalizedCopy text="Unser Ziel ist nicht, möglichst kompliziert zu planen. Unser Ziel ist, dass du eine Ausstattung bekommst, die zu deinem Produkt, deinem Budget und deinem nächsten Schritt passt." />

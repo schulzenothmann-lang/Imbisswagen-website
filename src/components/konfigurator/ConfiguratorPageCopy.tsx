@@ -26,7 +26,7 @@ export function ConfiguratorPageIntro({ initialType }: { initialType?: ProductTy
           ? isPavilion
             ? tc("Öffnungen und Ausstattung Schritt für Schritt festlegen — am Ende erhältst du dein individuelles Angebot.")
             : tc("Modell, Fenster und Ausstattung Schritt für Schritt festlegen — am Ende erhältst du dein individuelles Angebot.")
-          : tc("Wähle zuerst, ob du einen Imbiss-Anhänger oder einen Verkaufs-Pavillon konfigurieren möchtest.")}
+          : tc("Wähle zuerst, ob du einen Imbiss-Anhänger oder einen Verkaufspavillon konfigurieren möchtest.")}
       </p>
     </div>
   );

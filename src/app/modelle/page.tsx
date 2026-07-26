@@ -8,7 +8,7 @@ import { MODELS } from "@/lib/models";
 
 export const metadata: Metadata = {
   title: "Modelle | MINO",
-  description: "Die MINO Modellreihe im Überblick — vom kompakten Base bis zum Premium-Anhänger und Verkaufs-Pavillon.",
+  description: "Die MINO Modellreihe im Überblick — vom kompakten Light über Classic und Premium bis zum Verkaufspavillon Station.",
 };
 
 export default function ModellePage() {

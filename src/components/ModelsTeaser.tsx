@@ -18,7 +18,7 @@ import { useLocaleSettings } from "./LocaleProvider";
 // unabhängig vom Seitenverhältnis des jeweiligen Fotos.
 const models = [
   {
-    id: "basis",
+    id: "classic",
     imageId: "basis",
     name: "Classic",
     length: "5 M",
@@ -29,7 +29,7 @@ const models = [
     height: 512,
   },
   {
-    id: "standard",
+    id: "premium",
     imageId: "standard",
     name: "Premium",
     length: "5,5 M",
@@ -40,12 +40,12 @@ const models = [
     height: 587,
   },
   {
-    id: "xl",
+    id: "light",
     imageId: "xl",
-    name: "Base",
+    name: "Light",
     length: "1,5 M",
     weight: "500 KG",
-    price: "12900",
+    price: "ab 12.900 €",
     bodyOffset: "-10%",
     width: 1300,
     height: 779,

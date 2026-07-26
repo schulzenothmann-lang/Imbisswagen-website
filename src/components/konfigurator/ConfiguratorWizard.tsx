@@ -17,7 +17,7 @@ import {
   PROJECT_DETAILS,
   WINDOW_VARIANTS,
 } from "@/lib/konfigurator-options";
-import { MODELS } from "@/lib/models";
+import { TRAILER_MODELS } from "@/lib/models";
 import { LocalizedPrice } from "../LocalizedPrice";
 import { useLocaleSettings } from "../LocaleProvider";
 
@@ -44,8 +44,8 @@ type ContactState = {
 };
 
 const PAVILION_PRODUCT = {
-  id: "pavillon",
-  name: "Verkaufs-Pavillon",
+  id: "station",
+  name: "Station",
   length: "3 x 3 M",
   weight: "modular",
   price: "ab 7.900 €",
@@ -109,7 +109,7 @@ export function ConfiguratorWizard({
   const tcn = (text?: string) => (text ? translateCopy(text, language) : undefined);
   const productType = initialType;
   const validInitialModelId: string | null =
-    initialModelId && MODELS.some((m) => m.id === initialModelId) ? initialModelId : null;
+    initialModelId && TRAILER_MODELS.some((m) => m.id === initialModelId) ? initialModelId : null;
   const initialCanSkipModel = productType === "anhaenger" && validInitialModelId !== null;
   const sanitizedInitialStep =
     initialStep && initialStep > 1 && initialCanSkipModel ? Math.min(initialStep, STEPS.length) : 1;
@@ -133,7 +133,7 @@ export function ConfiguratorWizard({
   const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
   const [sent, setSent] = useState(false);
 
-  const selectedModel = MODELS.find((m) => m.id === modelId);
+  const selectedModel = TRAILER_MODELS.find((m) => m.id === modelId);
   const selectedPavilionSize = PAVILION_SIZES.find((option) => option.id === pavilionSizeId);
   const stepLabels =
     productType === "pavillon"
@@ -161,17 +161,16 @@ export function ConfiguratorWizard({
     productType === "pavillon"
       ? {
           ...PAVILION_PRODUCT,
-          name: t("salesPavilion"),
           length: selectedPavilionSize?.label ?? PAVILION_PRODUCT.length,
           price: selectedPavilionSize?.price ?? PAVILION_PRODUCT.price,
         }
       : {
-          id: selectedModel?.id ?? MODELS[0].id,
-          name: selectedModel?.name ?? MODELS[0].name,
-          length: selectedModel?.length ?? MODELS[0].length,
-          weight: selectedModel?.weight ?? MODELS[0].weight,
-          price: selectedModel?.price ?? MODELS[0].price,
-          image: `/images/modelle/${selectedModel?.imageId ?? MODELS[0].imageId}.png`,
+          id: selectedModel?.id ?? TRAILER_MODELS[0].id,
+          name: selectedModel?.name ?? TRAILER_MODELS[0].name,
+          length: selectedModel?.length ?? TRAILER_MODELS[0].length,
+          weight: selectedModel?.weight ?? TRAILER_MODELS[0].weight,
+          price: selectedModel?.price ?? TRAILER_MODELS[0].price,
+          image: selectedModel?.image ?? TRAILER_MODELS[0].image,
         };
   const selectedKitchenConcept = KITCHEN_CONCEPTS.find((option) => option.id === kitchenConcept);
   const includedKitchenEquipmentIds = selectedKitchenConcept?.includedEquipmentIds ?? [];
@@ -277,7 +276,7 @@ export function ConfiguratorWizard({
       .filter(Boolean);
 
     const body = [
-      `Produkttyp: ${productType === "pavillon" ? "Pavillon" : "Imbiss-Anhänger"}`,
+      `Produkttyp: ${productType === "pavillon" ? "Verkaufspavillon" : "Imbiss-Anhänger"}`,
       `Modell/Variante: ${displayProduct.name} (${displayProduct.length}, ${
         productType === "pavillon" ? displayProduct.price : `${displayProduct.weight}, ${displayProduct.price}`
       })`,
@@ -462,7 +461,7 @@ export function ConfiguratorWizard({
             )}
 
             <div className="grid gap-3 sm:grid-cols-2">
-              {productType === "anhaenger" && MODELS.map((m) => (
+              {productType === "anhaenger" && TRAILER_MODELS.map((m) => (
                 <button
                   key={m.id}
                   type="button"
@@ -473,7 +472,7 @@ export function ConfiguratorWizard({
                 >
                   <div className="flex aspect-[16/10] items-center justify-center overflow-hidden rounded-sm bg-kreide/60 p-3">
                     <img
-                      src={`/images/modelle/${m.imageId}.png`}
+                      src={m.image}
                       alt={m.name}
                       className="h-full w-auto max-w-full object-contain"
                     />

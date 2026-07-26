@@ -58,25 +58,32 @@ function TrailerGlyph({ size }: { size: TrailerGlyphSize }) {
 
 const models = [
   {
-    id: "xl",
-    name: "Base",
+    id: "light",
+    name: "Light",
     specs: "1,5 M · 500 KG",
-    price: "12900",
+    price: "ab 12.900 €",
     icon: <TrailerGlyph size="small" />,
   },
   {
-    id: "basis",
+    id: "classic",
     name: "Classic",
     specs: "5 M · 1,5 T",
     price: "ab 21.900 €",
     icon: <TrailerGlyph size="medium" />,
   },
   {
-    id: "standard",
+    id: "premium",
     name: "Premium",
     specs: "5,5 M · 1,7 T",
     price: "ab 25.900 €",
     icon: <TrailerGlyph size="large" />,
+  },
+  {
+    id: "station",
+    name: "Station",
+    specs: "ab 3 × 3 M · modular",
+    price: "ab 7.900 €",
+    icon: <StorefrontIcon aria-hidden className="size-5 shrink-0" weight="regular" />,
   },
 ];
 
@@ -89,7 +96,7 @@ const purchaseLinks = [
   },
   {
     href: "/angebote?angebot=kaufen&produkt=pavillon",
-    name: "Pavillons",
+    name: "Verkaufspavillons",
     eyebrow: "Günstiger starten",
     icon: <StorefrontIcon aria-hidden className="size-6 shrink-0" weight="regular" />,
   },
@@ -104,7 +111,7 @@ const rentalLinks = [
   },
   {
     href: "/angebote?angebot=mieten&produkt=pavillon",
-    name: "Pavillons",
+    name: "Verkaufspavillons",
     eyebrow: "Kurzfristig mieten",
     icon: <StorefrontIcon aria-hidden className="size-6 shrink-0" weight="regular" />,
   },

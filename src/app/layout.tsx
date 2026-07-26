@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     "Imbisswagen",
     "Verkaufsanhänger",
     "Foodtrailer",
-    "Verkaufs-Pavillon",
+    "Verkaufspavillon",
     "Gastronomieanhänger",
     "Imbissanhänger Bremen",
     "Imbissanhänger Norddeutschland",

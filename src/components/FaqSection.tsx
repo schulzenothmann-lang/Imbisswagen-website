@@ -33,7 +33,7 @@ const faqs = [
   {
     question: "Gibt es auch fertige Produkte?",
     answer:
-      "Ja. Verfügbare Imbiss-Anhänger und Pavillons findest du unter Sofort verfügbar oder Mieten.",
+      "Ja. Verfügbare Imbiss-Anhänger und Verkaufspavillons findest du unter Sofort verfügbar oder Mieten.",
   },
   {
     question: "Wie startet der Prozess?",

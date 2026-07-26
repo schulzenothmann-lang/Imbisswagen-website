@@ -12,9 +12,9 @@ import { useLocaleSettings } from "./LocaleProvider";
 type FacetOption = { id: string; label: string; available: boolean };
 
 const modelFacets: FacetOption[] = [
-  { id: "xl", label: "Base", available: false },
-  { id: "basis", label: "Classic", available: true },
-  { id: "standard", label: "Premium", available: false },
+  { id: "light", label: "Light", available: false },
+  { id: "classic", label: "Classic", available: true },
+  { id: "premium", label: "Premium", available: false },
 ];
 
 const availabilityFacets: FacetOption[] = [
@@ -34,12 +34,12 @@ const priceFacets: FacetOption[] = [
   { id: "ueber-35k", label: "über 35.000 €", available: false },
 ];
 
-// Weitere Anhänger (Base und Premium) folgen ab Werk, sobald sie als
+// Weitere Anhänger (Light und Premium) folgen ab Werk, sobald sie als
 // sofort verfügbare Einheit vorrätig sind — bis dahin nur Classic gelistet.
 const products = [
   {
-    id: "basis",
-    model: "basis",
+    id: "classic",
+    model: "classic",
     name: "MINO Classic",
     tagline: "Der Einstieg — solide Fläche für den ersten Auftritt.",
     length: "5 M",

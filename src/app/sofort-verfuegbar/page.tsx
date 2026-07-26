@@ -6,7 +6,7 @@ import { ProductTypeLanding } from "@/components/ProductTypeLanding";
 
 export const metadata: Metadata = {
   title: "Sofort verfügbar | MINO",
-  description: "Wähle zwischen sofort verfügbaren Imbissanhängern und Verkaufs-Pavillons.",
+  description: "Wähle zwischen sofort verfügbaren Imbissanhängern und Verkaufspavillons.",
 };
 
 export default function SofortVerfuegbarPage() {

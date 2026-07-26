@@ -6,7 +6,7 @@ import { ProductTypeLanding } from "@/components/ProductTypeLanding";
 
 export const metadata: Metadata = {
   title: "Mieten | MINO",
-  description: "Wähle zwischen mietbaren Imbissanhängern und Verkaufs-Pavillons.",
+  description: "Wähle zwischen mietbaren Imbissanhängern und Verkaufspavillons.",
 };
 
 export default function MietenPage() {

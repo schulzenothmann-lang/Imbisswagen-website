@@ -17,7 +17,7 @@ export function ModelsPageIntro() {
         <span className="font-sans font-black tracking-tight">{tc("Modelle.")}</span>
       </h1>
       <p className="font-sans text-lg leading-8 text-graphit/70">
-        {tc("Vom kompakten Base bis zum Premium — jedes Modell lässt sich im Konfigurator auf dein Konzept zuschneiden.")}
+        {tc("Vom kompakten Light bis zum Premium — jedes Modell lässt sich im Konfigurator auf dein Konzept zuschneiden.")}
       </p>
     </div>
   );

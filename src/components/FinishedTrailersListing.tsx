@@ -67,7 +67,7 @@ function optionMatchesProduct(groupId: FilterGroupId, option: string, product: F
   }
 
   if (groupId === "model") {
-    if (option === "Verkaufs-Pavillon") return product.productType === "pavillon";
+    if (option === "Station") return product.productType === "pavillon";
     return product.productType === "anhaenger" && product.name === option;
   }
 
@@ -286,7 +286,7 @@ function ProductCard({ product }: { product: FinishedTrailerProduct }) {
 
       <div className="flex flex-1 flex-col px-4 pt-4 pb-4">
         <h2 className="font-sans text-[0.95rem] font-black tracking-tight">
-          {product.productType === "pavillon" ? t("salesPavilion") : product.name}
+          {product.name}
         </h2>
         <p className="mt-1.5 min-h-10 font-sans text-[0.82rem] leading-5 text-graphit/68">
           {tc(product.description)}
